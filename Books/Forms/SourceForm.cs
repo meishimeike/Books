@@ -82,8 +82,7 @@ namespace Books
                         {
                             listView1.SelectedItems[i].Remove();
                             delSource(rootsourcename);
-                        }
-                        
+                        }       
                         else
                             MessageBox.Show("Delete Faile");
                     }

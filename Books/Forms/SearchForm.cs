@@ -32,17 +32,24 @@ namespace Books
         private void GetTree()
         {
             List<string> trees = BookHelper.GetRootSourceName();
-            foreach(string tree in trees)
+            if(trees!=null && trees.Count > 0)
             {
-                TreeNode TN = new TreeNode(tree);
-                List<string> subnodes = BookHelper.GetSourceName(tree);
-                foreach(string node in subnodes)
+                foreach (string tree in trees)
                 {
-                    TreeNode subTN = new TreeNode(node);
-                    TN.Nodes.Add(subTN);
+                    TreeNode TN = new TreeNode(tree);
+                    List<string> subnodes = BookHelper.GetSourceName(tree);
+                    foreach (string node in subnodes)
+                    {
+                        TreeNode subTN = new TreeNode(node);
+                        TN.Nodes.Add(subTN);
+                    }
+                    treeView1.Nodes.Add(TN);
                 }
-                treeView1.Nodes.Add(TN);
+            }else
+            {
+                MessageBox.Show("Please add source.");
             }
+            
         }
       
         private void AddControl(string rootname, string sourcename, List<KeyValuePair<string, string>> Pages)

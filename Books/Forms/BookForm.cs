@@ -222,9 +222,9 @@ namespace Books
                     {
                         listView1.Items[i].Remove();
                     }
-                }
-                BookHelper.DelSourceAdress(rootsourcename);
+                }           
             }
+            BookHelper.DelSourceAdress(rootsourcename);
         }
 
         private void aboutAToolStripMenuItem_Click(object sender, EventArgs e)

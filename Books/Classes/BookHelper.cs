@@ -543,7 +543,7 @@ namespace BookHelperLib
                 KeyValuePair<string, string> source = SourceList[i];
                 if (source.Key == rootsourcename)
                 {
-                    SourceList.RemoveAt(i);
+                    SourceList.Remove(source);
                     break;
                 }
             }
@@ -552,7 +552,7 @@ namespace BookHelperLib
             {
                 if (SourcePool[m].RootName == rootsourcename)
                 {
-                    SourcePool.RemoveAt(m);
+                    SourcePool.Remove(SourcePool[m]);
                     break;
                 }
             }
