@@ -572,27 +572,23 @@ namespace BookHelperLib
         private static HttpClient GetHttpClient()
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            HttpClient httpClient;
+            HttpClientHandler handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
             if (Proxysets.Enable)
             {
                 WebProxy Tproxy = new WebProxy(Proxysets.Host, Proxysets.Port);
-                HttpClientHandler Hch = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
                 if (!string.IsNullOrWhiteSpace(Proxysets.Username) && !string.IsNullOrWhiteSpace(Proxysets.Password))
                 {
                     NetworkCredential nc = new NetworkCredential(Proxysets.Username, Proxysets.Password);
                     Tproxy.Credentials = nc;
                 }
-                Hch.Proxy = Tproxy;
-                httpClient = new HttpClient(Hch);
+                handler.Proxy = Tproxy;
             }
-            else
-            {
-                httpClient = new HttpClient();
-            }
+            HttpClient httpClient = new HttpClient(handler);
             httpClient.Timeout = new TimeSpan(0, 0, 20);
             httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36");
             httpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
             httpClient.DefaultRequestHeaders.Add("ContentType", "text/html;charset=utf-8");
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
             httpClient.DefaultRequestHeaders.Add("Cookie", cookie);
             return httpClient;
         }
@@ -629,6 +625,7 @@ namespace BookHelperLib
                 try
                 {
                     string result = Hclient.GetStringAsync(url).Result;
+
                     if (!string.IsNullOrWhiteSpace(result))
                     {
                         Hclient.Dispose();
