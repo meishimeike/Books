@@ -587,8 +587,8 @@ namespace BookHelperLib
             httpClient.Timeout = new TimeSpan(0, 0, 20);
             httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36");
             httpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
-            httpClient.DefaultRequestHeaders.Add("ContentType", "text/html;charset=utf-8");
-            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+            //httpClient.DefaultRequestHeaders.Add("ContentType", "text/html;charset=utf-8");
+            //httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
             httpClient.DefaultRequestHeaders.Add("Cookie", cookie);
             return httpClient;
         }
