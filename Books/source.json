@@ -18,7 +18,8 @@
       "chapter": "//div[@id='readerlist']//ul//li//a"
     },
     "ruleContentTxt": {
-      "content": "//div[@id='content']"
+      "content": "//div[@id='content']",
+      "nextpage": "//a[@id='next_url']"
     },
     "ruleSearch": {
       "url": "https://www.caimoge.com/search/",

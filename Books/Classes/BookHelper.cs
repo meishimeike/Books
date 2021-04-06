@@ -87,6 +87,7 @@ namespace BookHelperLib
         public class ruleContentTxt
         {
             public string content { get; set; }
+            public string nextpage { get; set; }
         }
         public class ruleSearch
         {
@@ -353,6 +354,7 @@ namespace BookHelperLib
             bookinfo.LoadHtml(reurlstr);
             bookSource BS = GetSource(book.RootSourcename, book.Sourcename);
             string imgurl = bookinfo.DocumentNode.SelectSingleNode(BS.ruleBook.bookimg).Attributes["src"].Value;
+
             if (Regex.Match(imgurl, "^//").Length > 0)
             {
                 imgurl = url.Scheme + ":" + imgurl;
@@ -432,7 +434,8 @@ namespace BookHelperLib
 
         #region 获取章节内容
         public static string GetContentTxt(string url,Book book)
-        {           
+        {
+            string Txt = null;
             string res =GetRequst(url);
             if (string.IsNullOrWhiteSpace(res))
             {
@@ -442,7 +445,14 @@ namespace BookHelperLib
             HAP.HtmlDocument doc = new HAP.HtmlDocument();
             doc.LoadHtml(res);
             bookSource BSource =GetSource(book.RootSourcename, book.Sourcename);
-            string Txt = doc.DocumentNode.SelectSingleNode(BSource.ruleContentTxt.content).InnerText;
+            Txt = doc.DocumentNode.SelectSingleNode(BSource.ruleContentTxt.content).InnerText;
+
+            if (!string.IsNullOrWhiteSpace(BSource.ruleContentTxt.nextpage))
+            {
+                string nexturl = doc.DocumentNode.SelectSingleNode(BSource.ruleContentTxt.nextpage).Attributes["href"].Value;
+                if (!string.IsNullOrWhiteSpace(nexturl))
+                    Txt += GetContentTxt(GetAllUrl(nexturl, new Uri(url)), book);
+            }
             return Txt;
         }
         #endregion
@@ -602,6 +612,28 @@ namespace BookHelperLib
             return httpClient;
         }
 
+        /// <summary>
+        /// 返回完整网站链接
+        /// </summary>
+        /// <param name="Testurl">测试链接</param>
+        /// <param name="Url">主页地址</param>
+        /// <returns></returns>
+        private static string GetAllUrl(string Testurl,Uri Url)
+        {
+            string NewUrl = null;
+            if (Regex.Match(Testurl, "^//").Length > 0)
+            {
+                NewUrl = Url.Scheme + ":" + Testurl;
+            }
+            else if (Regex.Match(Testurl, "^/").Length > 0)
+            {
+                NewUrl = Url.Scheme + "://" + Url.Host + Testurl;
+            }else
+            {
+                NewUrl = Url.ToString();
+            }
+            return NewUrl;
+        }
         /// <summary>
         /// Get方式获取网页内容
         /// </summary>
