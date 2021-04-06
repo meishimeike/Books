@@ -366,10 +366,10 @@ namespace BookHelperLib
             book.Coverpath = CoverSavePath + book.Name + Path.GetExtension(book.Coverurl);
             book.Des = bookinfo.DocumentNode.SelectSingleNode(BS.ruleBook.des).InnerText;
             book.Author = bookinfo.DocumentNode.SelectSingleNode(BS.ruleBook.author).InnerText;
-            if (!File.Exists(book.Coverpath))
-            {
-                DownloadFile(book.Coverurl, book.Coverpath);
-            }          
+            //if (!File.Exists(book.Coverpath))
+            //{
+            //    DownloadFile(book.Coverurl, book.Coverpath);
+            //}          
             BooksList.Add(book);
         }
         #endregion
@@ -387,7 +387,16 @@ namespace BookHelperLib
             HAP.HtmlDocument doc = new HAP.HtmlDocument();
             doc.LoadHtml(docstr);
             bookSource BSource = GetSource(book.RootSourcename, book.Sourcename);
-            string Txturl = doc.DocumentNode.SelectSingleNode(BSource.ruleBook.url).Attributes["href"].Value;
+            string Txturl = "";
+            if (BSource.ruleBook.url == "nowpage")
+            {
+                Txturl = book.Url;
+            }
+            else
+            {
+                Txturl = doc.DocumentNode.SelectSingleNode(BSource.ruleBook.url).Attributes["href"].Value;
+            }
+            
 
             if (Regex.Match(Txturl, "^//").Length > 0)
             {

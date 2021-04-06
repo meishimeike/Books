@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using BookHelperLib;
+using System.Threading;
 
 namespace Books
 {
@@ -157,6 +158,47 @@ namespace Books
             }
             AddControl(rootname, sourcename, Pages);
 
+            System.Threading.Tasks.Task CheckCove = new System.Threading.Tasks.Task(new Action(UpdateCoveimage));
+            CheckCove.Start();
+
+        }
+
+        private void UpdateCoveimage()
+        {
+            if (listView1.InvokeRequired)
+            {
+                Invoke(new Action(() =>
+                {
+                    for (int i = 0; i < listView1.Items.Count; i++)
+                    {
+                        BookHelper.Book book = (BookHelper.Book)listView1.Items[i].Tag;
+                        if (!File.Exists(book.Coverpath))
+                        {
+                            BookHelper.DownloadFile(book.Coverurl, book.Coverpath);
+                            if (File.Exists(book.Coverpath))
+                            {
+                                imageList1.Images.RemoveByKey(book.Name);
+                                imageList1.Images.Add(book.Name, BookHelper.ReadImageFile(book.Coverpath));
+                            }
+                        }
+                    }
+
+                }));
+            }
+            else
+            {
+                for (int i = 0; i < listView1.Items.Count; i++)
+                {
+                    BookHelper.Book book = (BookHelper.Book)listView1.Items[i].Tag;
+                    if (!File.Exists(book.Coverpath))
+                    {
+                        BookHelper.DownloadFile(book.Coverurl, book.Coverpath);
+                        imageList1.Images.RemoveByKey(book.Name);
+                        Image cove = BookHelper.ReadImageFile(book.Coverpath);
+                        imageList1.Images.Add(book.Name, cove);
+                    }
+                }
+            }
         }
         private void addToMybooksToolStripMenuItem_Click(object sender, EventArgs e)
         {

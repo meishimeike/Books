@@ -61,12 +61,13 @@ namespace Books
             linkLabel1.Cursor = Cursors.WaitCursor;
             try
             {
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 WebProxy Tproxy = new WebProxy(textBox1.Text.Trim(), int.Parse(textBox2.Text.Trim()));
                 NetworkCredential nc = new NetworkCredential(textBox3.Text.Trim(), textBox4.Text.Trim());
-                HttpClientHandler Hch = new HttpClientHandler();
+                HttpClientHandler Hch = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
                 Hch.Proxy = Tproxy;
                 HttpClient httpClient = new HttpClient(Hch);
-                if (string.IsNullOrWhiteSpace(httpClient.GetStringAsync("https://www.baidu.com/").Result))
+                if (string.IsNullOrWhiteSpace(httpClient.GetStringAsync("http://www.baidu.com/").Result))
                 {
                     MessageBox.Show("Failed to connect to the network.");
                 }

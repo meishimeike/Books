@@ -7,6 +7,7 @@ D:\VS\Books\Books\bin\x86\Debug\System.Data.SQLite.dll
 D:\VS\Books\Books\bin\x86\Debug\HtmlAgilityPack.pdb
 D:\VS\Books\Books\bin\x86\Debug\HtmlAgilityPack.xml
 D:\VS\Books\Books\bin\x86\Debug\Newtonsoft.Json.xml
+D:\VS\Books\Books\obj\x86\Debug\Books.csprojResolveAssemblyReference.cache
 D:\VS\Books\Books\obj\x86\Debug\Books.AboutForm.resources
 D:\VS\Books\Books\obj\x86\Debug\Books.BookForm.resources
 D:\VS\Books\Books\obj\x86\Debug\Books.LoginForm.resources
