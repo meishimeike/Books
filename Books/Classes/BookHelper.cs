@@ -449,9 +449,13 @@ namespace BookHelperLib
 
             if (!string.IsNullOrWhiteSpace(BSource.ruleContentTxt.nextpage))
             {
-                string nexturl = doc.DocumentNode.SelectSingleNode(BSource.ruleContentTxt.nextpage).Attributes["href"].Value;
-                if (!string.IsNullOrWhiteSpace(nexturl))
-                    Txt += GetContentTxt(GetAllUrl(nexturl, new Uri(url)), book);
+                string conte = doc.DocumentNode.SelectSingleNode(BSource.ruleContentTxt.nextpage).InnerText;
+                if (conte.Trim() == "下一页")
+                {
+                    string nexturl = doc.DocumentNode.SelectSingleNode(BSource.ruleContentTxt.nextpage).Attributes["href"].Value;
+                    if (!string.IsNullOrWhiteSpace(nexturl))
+                        Txt += GetContentTxt(GetAllUrl(nexturl, new Uri(url)), book);
+                }      
             }
             return Txt;
         }
