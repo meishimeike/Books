@@ -30,65 +30,35 @@
       "page": ""
     }
   }
-  //,
-  //{
-  //  "sourceName": "斋书苑",
-  //  "sourceUrl": "https://www.zhaishuyuan.com/shuku/11_1_0_0_0_1_0_0",
-  //  "sorts": "//dl[@class='pilltags']//dd//a|//dl[@class='pilltags clearfix']//dd//a",
-  //  "ruleSort": {
-  //    "booklist":"//div[@class='shulist']//ul",
-	//  "books":"//li[@class='three']//a",
-	//  "page":"//div[@class='pages']/a" 
-  //  },
-	//"ruleBook": {
-	//  "des":"//div[@id='bookintro']//p",
-	//  "author":"//span[@id='author']//a",
-	//  "bookimg":"//div[@id='bookimg']//img",
-	//  "url":"//a[class='tgcj']"	  
-  //  },
-	//"ruleChapter":{
-	//  "chapter":"//div[@id='readerlists']//ul//li//a"
-	//},
-	//"ruleContentTxt":{
-	//	"content":"//div[@id='content']"
-	//},
-  //  "ruleSearch": {
-	//	"url": "https://www.zhaishuyuan.com/search/",
-	//	"method": "GET",
-	//	"searchkey":"key",
-	//	"booklist":"//div[@id='sitembox']//dl",
-	//	"bookurl":"//dd//h3//a",
-	//	"page":""
-  //  }
-  //},
-  //{
-  //  "sourceName": "衍墨轩",
-  //  "sourceUrl": "https://www.ymxxs.com/",
-  //  "sorts": "//nav[@class='container']//ul//li//a",
-  //  "ruleSort": {
-  //    "booklist":"//section[@class='lastest']//ul//li",
-	//  "books":"//span[@class='n2']//a",
-	//  "page":"//li[@class='pagination']/a" 
-  //  },
-	//"ruleBook": {
-	//  "des":"//p[@class='desc']",
-	//  "author":"//p[@class='detail pt20']//a",
-	//  "bookimg":"//div[@class='cover']//img",
-	//  "url":"//div[@class='operate clearfix']//a[3]"
-  //  },
-	//"ruleChapter":{
-	//  "chapter":"//li[@class='col3']//a"
-	//},
-	//"ruleContentTxt":{
-	//	"content":"//div[@id='content']"
-	//},
-  //  "ruleSearch": {
-	//	"url": "https://www.ymxxs.com/search.htm",
-	//	"method": "GET",
-	//	"searchkey":"keyword",
-	//	"booklist":"//section[@class='lastest']//ul//li",
-	//	"bookurl":"//span[@class='n2']//a",
-	//	"page":"//li[@class='pagination']/a"
-  //  }
-  //}
+  ,
+  {
+    "sourceName": "衍墨轩",
+    "sourceUrl": "http://www.yanmoxuan.net/",
+    "sorts": "//nav[@class='container']//ul//li//a",
+    "ruleSort": {
+      "booklist":"//section[@class='lastest']//ul//li",
+	    "books":"//span[@class='n2']//a",
+	    "page":"//li[@class='pagination']/a" 
+    },
+	"ruleBook": {
+	  "des":"//p[@class='desc']",
+	  "author":"//p[@class='detail pt20']//a",
+	  "bookimg":"//div[@class='cover']//img",
+	  "url":"//div[@class='operate clearfix']//a[3]"
+    },
+	"ruleChapter":{
+	  "chapter":"//li[@class='col3']//a"
+	},
+	"ruleContentTxt":{
+		"content":"//div[@id='content']"
+	},
+    "ruleSearch": {
+		"url": "http://www.yanmoxuan.net/search.htm",
+		"method": "GET",
+		"searchkey":"keyword",
+		"booklist":"//section[@class='lastest']//ul//li",
+		"bookurl":"//span[@class='n2']//a",
+		"page":"//li[@class='pagination']/a"
+    }
+  }
 ]

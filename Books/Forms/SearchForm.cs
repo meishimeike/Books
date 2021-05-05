@@ -103,7 +103,7 @@ namespace Books
             {
                 return;
             }           
-            if (treeView1.SelectedNode.Level == 1)
+            if (treeView1.SelectedNode.Level == 1 && treeView1.SelectedNode.Nodes.Count == 0)
             {
                 string rootname = treeView1.SelectedNode.Parent.Text;
                 string sourcename = treeView1.SelectedNode.Text;
@@ -126,6 +126,7 @@ namespace Books
                 GetBooksList(rootname, sourcename, listurl);
             }
             treeView1.Cursor = Cursors.Default;
+            UpdateCoveimages();
         }
 
         private void GetBooksList(string rootname, string sourcename, string listurl)
@@ -153,53 +154,61 @@ namespace Books
                 ListViewItem lvi = new ListViewItem(book.Name);
                 lvi.Tag = book;
                 lvi.ImageKey = book.Name;
-                lvi.ToolTipText = "作者:" + book.Author + Environment.NewLine + "源:" + book.RootSourcename + "-->" + book.Sourcename + Environment.NewLine + book.Des;
+                lvi.ToolTipText = "作者:" + book.Author + Environment.NewLine + "源:" + book.RootSourcename + "[" + book.Sourcename + "]" + Environment.NewLine + "简介:" + book.Des;
                 listView1.Items.Add(lvi);
             }
-            AddControl(rootname, sourcename, Pages);
-
-            System.Threading.Tasks.Task CheckCove = new System.Threading.Tasks.Task(new Action(UpdateCoveimage));
-            CheckCove.Start();
-
+            AddControl(rootname, sourcename, Pages);          
         }
 
-        private void UpdateCoveimage()
+        private void UpdateCoveimages()
         {
-            if (listView1.InvokeRequired)
+            for (int i = 0; i < listView1.Items.Count; i++)
             {
-                Invoke(new Action(() =>
+                BookHelper.Book book = (BookHelper.Book)listView1.Items[i].Tag;
+                Thread UpdateImageThread = new Thread(() => UpdateImage(book));
+                UpdateImageThread.Start();
+            }
+         }
+         private void UpdateImage(BookHelper.Book book)
+         {
+            if (!File.Exists(book.Coverpath))
+            {
+                BookHelper.DownloadFile(book.Coverurl, book.Coverpath);
+                if (File.Exists(book.Coverpath))
                 {
-                    for (int i = 0; i < listView1.Items.Count; i++)
+                    if (InvokeRequired)
                     {
-                        BookHelper.Book book = (BookHelper.Book)listView1.Items[i].Tag;
-                        if (!File.Exists(book.Coverpath))
-                        {
-                            BookHelper.DownloadFile(book.Coverurl, book.Coverpath);
-                            if (File.Exists(book.Coverpath))
+                        Invoke(new Action(() => {
+                            try
                             {
                                 imageList1.Images.RemoveByKey(book.Name);
                                 imageList1.Images.Add(book.Name, BookHelper.ReadImageFile(book.Coverpath));
                             }
+                            catch (Exception)
+                            {
+                                //File.Delete(book.Coverpath);
+                                //throw;
+                            }
+                            
+                        }));
+                    }
+                    else
+                    {
+                        try
+                        {
+                            imageList1.Images.RemoveByKey(book.Name);
+                            imageList1.Images.Add(book.Name, BookHelper.ReadImageFile(book.Coverpath));
+                        }
+                        catch (Exception)
+                        {
+                            //File.Delete(book.Coverpath);
+                            //throw;
                         }
                     }
-
-                }));
-            }
-            else
-            {
-                for (int i = 0; i < listView1.Items.Count; i++)
-                {
-                    BookHelper.Book book = (BookHelper.Book)listView1.Items[i].Tag;
-                    if (!File.Exists(book.Coverpath))
-                    {
-                        BookHelper.DownloadFile(book.Coverurl, book.Coverpath);
-                        imageList1.Images.RemoveByKey(book.Name);
-                        Image cove = BookHelper.ReadImageFile(book.Coverpath);
-                        imageList1.Images.Add(book.Name, cove);
-                    }
+                    
                 }
             }
-        }
+         }      
         private void addToMybooksToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listView1.SelectedItems.Count > 0)
@@ -241,10 +250,11 @@ namespace Books
                 ListViewItem lvi = new ListViewItem(book.Name);
                 lvi.Tag = book;
                 lvi.ImageKey = book.Name;
-                lvi.ToolTipText = "作者:" + book.Author + Environment.NewLine + "源:" + book.RootSourcename + "-->" + book.Sourcename + Environment.NewLine + book.Des;
-                listView1.Items.Add(lvi);
+                lvi.ToolTipText = "作者:" + book.Author + Environment.NewLine + "源:" + book.RootSourcename + "[" + book.Sourcename + "]" + Environment.NewLine + "简介:" + book.Des;
+                listView1.Items.Add(lvi);         
             }
 
+            UpdateCoveimages();
             textBox1.Cursor = Cursors.IBeam;
             button1.Cursor = Cursors.Default;
         }

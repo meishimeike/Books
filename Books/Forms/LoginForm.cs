@@ -115,19 +115,23 @@ namespace Books
                 
                 //创建书籍内容数据
                 sql = @"CREATE TABLE Fictions ( 
-                        Id       INTEGER PRIMARY KEY AUTOINCREMENT,
-                        Bookname INTEGER NOT NULL,
-                        Chapter VARCHAR NOT NULL,
-                        Section VARCHAR
+                        Id             INTEGER PRIMARY KEY AUTOINCREMENT,
+                        Userid         INTEGER NOT NULL,
+                        Rootsourcename VARCHAR NOT NULL,
+                        Bookname       INTEGER NOT NULL,
+                        Chapter        VARCHAR NOT NULL,
+                        Section        VARCHAR NOT NULL 
                     );";
                 Configs.Sql.ExecuteNonQuery(sql);
 
                 //创建书籍章节数据
                 sql = @"CREATE TABLE Chapters ( 
-                        Id       INTEGER PRIMARY KEY AUTOINCREMENT,
-                        Bookname INTEGER NOT NULL,
-                        Chapter VARCHAR NOT NULL,
-                        Sectionurl VARCHAR NOT NULL
+                        Id             INTEGER PRIMARY KEY AUTOINCREMENT,
+                        Userid         INTEGER NOT NULL,
+                        Rootsourcename VARCHAR NOT NULL,
+                        Bookname       VARCHAR NOT NULL,
+                        Sectionurl     VARCHAR NOT NULL,
+                        Chapter        VARCHAR NOT NULL 
                     );";
                 Configs.Sql.ExecuteNonQuery(sql);
 
@@ -147,5 +151,6 @@ namespace Books
             }
         }
         #endregion
+
     }
 }

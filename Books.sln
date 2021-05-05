@@ -1,28 +1,25 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Books", "Books\Books.csproj", "{436AAEFA-9C13-4412-BE58-4957746C354B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
-		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{436AAEFA-9C13-4412-BE58-4957746C354B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{436AAEFA-9C13-4412-BE58-4957746C354B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{436AAEFA-9C13-4412-BE58-4957746C354B}.Debug|x86.ActiveCfg = Debug|x86
-		{436AAEFA-9C13-4412-BE58-4957746C354B}.Debug|x86.Build.0 = Debug|x86
 		{436AAEFA-9C13-4412-BE58-4957746C354B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{436AAEFA-9C13-4412-BE58-4957746C354B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{436AAEFA-9C13-4412-BE58-4957746C354B}.Release|x86.ActiveCfg = Release|x86
-		{436AAEFA-9C13-4412-BE58-4957746C354B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6EA7746F-4433-403C-9070-0B1DF1678739}
 	EndGlobalSection
 EndGlobal

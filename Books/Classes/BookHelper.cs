@@ -267,9 +267,10 @@ namespace BookHelperLib
         {
             ThreadPool.Clear();
             BooksList.Clear();
-            Book book = new Book();
+            
             for (int i = 0; i < SourcePool.Count; i++)
             {
+                Book book = new Book();
                 for (int m = 0; m < SourcePool[i].Source.Count; m++)
                 {
                     book.RootSourcename = SourcePool[i].RootName;
@@ -282,7 +283,7 @@ namespace BookHelperLib
                     param.Add(new KeyValuePair<string, string>(BS.ruleSearch.searchkey, keyvalue));
 
                     string responseUrl = "";
-                    string result = PostRequst(Requrl, param, out responseUrl);
+                    string result = DataRequst(Requrl, Method, param, out responseUrl);
 
                     if (string.IsNullOrWhiteSpace(result))
                     {
@@ -298,6 +299,7 @@ namespace BookHelperLib
                         HAP.HtmlDocument WoodHD = new HAP.HtmlDocument();
                         WoodHD.LoadHtml(Searchinfo[n].InnerHtml);
                         HAP.HtmlNode bookinfo = WoodHD.DocumentNode.SelectSingleNode(BS.ruleSearch.bookurl);
+                        if (bookinfo == null) { continue; }
                         string bookurl = bookinfo.Attributes["href"].Value;
                         if (Regex.Match(bookurl, "^//").Length > 0)
                         {
@@ -367,11 +369,7 @@ namespace BookHelperLib
             book.Coverurl = imgurl;
             book.Coverpath = CoverSavePath + book.Name + Path.GetExtension(book.Coverurl);
             book.Des = bookinfo.DocumentNode.SelectSingleNode(BS.ruleBook.des).InnerText;
-            book.Author = bookinfo.DocumentNode.SelectSingleNode(BS.ruleBook.author).InnerText;
-            //if (!File.Exists(book.Coverpath))
-            //{
-            //    DownloadFile(book.Coverurl, book.Coverpath);
-            //}          
+            book.Author = bookinfo.DocumentNode.SelectSingleNode(BS.ruleBook.author).InnerText;      
             BooksList.Add(book);
         }
         #endregion
@@ -414,6 +412,7 @@ namespace BookHelperLib
             wooddoc.LoadHtml(GetRequst(Txturl));
             HAP.HtmlNodeCollection wood = wooddoc.DocumentNode.SelectNodes(BSource.ruleChapter.chapter);
             List<KeyValuePair<string, string>> Contents = new List<KeyValuePair<string, string>>();
+            if (wood == null) return Contents;
             for (int i = 0; i < wood.Count; i++)
             {
                 string tit = wood[i].InnerText;
@@ -449,10 +448,17 @@ namespace BookHelperLib
 
             if (!string.IsNullOrWhiteSpace(BSource.ruleContentTxt.nextpage))
             {
-                string nexturl = doc.DocumentNode.SelectSingleNode(BSource.ruleContentTxt.nextpage).Attributes["href"].Value;
-                if (!string.IsNullOrWhiteSpace(nexturl))
-                    Txt += GetContentTxt(GetAllUrl(nexturl, new Uri(url)), book);
+                HAP.HtmlNode HN = doc.DocumentNode.SelectSingleNode(BSource.ruleContentTxt.nextpage);
+                if (HN!=null && HN.InnerText.Trim() == "下一页")
+                {
+                    string nexturl = doc.DocumentNode.SelectSingleNode(BSource.ruleContentTxt.nextpage).Attributes["href"].Value;
+                    if (!string.IsNullOrWhiteSpace(nexturl))
+                        Txt += GetContentTxt(GetAllUrl(nexturl, new Uri(url)), book);
+                }       
             }
+
+            Txt.Replace("<br/>", Environment.NewLine);
+            Txt.Replace("　　", "");
             return Txt;
         }
         #endregion
@@ -682,12 +688,34 @@ namespace BookHelperLib
             Hclient.Dispose();
             return "";
         }
-
-        public static string PostRequst(string url, List<KeyValuePair<string, string>> param, out string responseUrl, string cookie = "")
+        
+        public static string DataRequst(string url,string Method, List<KeyValuePair<string, string>> param, out string responseUrl, string cookie = "")
         {
-            return PostRequst(new Uri(url), param, out responseUrl, cookie);
+            return DataRequst(new Uri(url), Method, param, out responseUrl, cookie);
         }
-        public static string PostRequst(Uri url, List<KeyValuePair<string, string>> param, out string responseUrl, string cookie = "")
+        public static string DataRequst(Uri url, string Method, List<KeyValuePair<string, string>> param, out string responseUrl, string cookie = "")
+        {
+            if (Method.Trim().ToUpper() == "POST")
+            {
+                return PostRequst(url, param, out responseUrl, cookie);
+            }
+            else
+            {
+                string data = "?";
+                for(int i = 0; i < param.Count; i++)
+                {
+                    if (i == 0) {
+                        data += param[i].Key + "=" + param[i].Value;
+                    }else
+                    {
+                        data += "&" + param[i].Key + "=" + param[i].Value;
+                    }               
+                }
+                responseUrl = url.ToString();
+                return GetRequst(url.ToString() + data);
+            }
+        }
+        private static string PostRequst(Uri url, List<KeyValuePair<string, string>> param, out string responseUrl, string cookie = "")
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             try
@@ -722,6 +750,7 @@ namespace BookHelperLib
         /// <param name="n">重试次数</param>
         public static void DownloadFile(string url,string filename,int n=3)
         {
+            if (File.Exists(filename)) return;
             HttpClient client = GetHttpClient();
             //尝试3次
             for (int i = 0; i < n; i++)
@@ -810,6 +839,44 @@ namespace BookHelperLib
                 Logsadd(log);
             }
         }
+        #endregion
+
+        #region 图片转换
+        /// <summary>
+        /// base64 转 Image
+        /// </summary>
+        /// <param name="base64">base64字符串</param>
+        public static Bitmap Base64ToImage(string base64)
+        {
+            base64 = base64.Replace("data:image/png;base64,", "").Replace("data:image/jgp;base64,", "").Replace("data:image/jpg;base64,", "").Replace("data:image/jpeg;base64,", "");//将base64头部信息替换
+            byte[] bytes = Convert.FromBase64String(base64);
+            MemoryStream memStream = new MemoryStream(bytes);
+            Image mImage = Image.FromStream(memStream);
+            Bitmap bp = new Bitmap(mImage);
+            return bp;
+        }
+
+        /// <summary>
+        /// Image 转成 base64
+        /// </summary>
+        /// <param name="fileFullName">图片文件路径</param>
+        public static string ImageToBase64(string fileFullName)
+        {
+            try
+            {
+                Bitmap bmp = new Bitmap(fileFullName);
+                MemoryStream ms = new MemoryStream();
+                bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                byte[] arr = new byte[ms.Length]; ms.Position = 0;
+                ms.Read(arr, 0, (int)ms.Length); ms.Close();
+                return Convert.ToBase64String(arr);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         #endregion
     }
 }

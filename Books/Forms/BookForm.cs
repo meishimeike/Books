@@ -124,7 +124,7 @@ namespace Books
                         imageList1.Images.Add(BK.Name, Properties.Resources._null);
                     lvi.ImageKey = BK.Name;
                     lvi.Tag = BK;
-                    lvi.ToolTipText = "作者:" + BK.Author + Environment.NewLine + BK.Des;
+                    lvi.ToolTipText = "作者:" + BK.Author + Environment.NewLine + "源:" + BK.RootSourcename + "[" + BK.Sourcename + "]" + Environment.NewLine + "简介:" + BK.Des;
                     listView1.Items.Add(lvi);
                 }
 
@@ -146,7 +146,8 @@ namespace Books
             {
                 foreach (ListViewItem lv in listView1.Items)
                 {
-                    if (lv.Text == book.Name)
+                    BookHelper.Book bK = (BookHelper.Book)lv.Tag;
+                    if (bK.Name == book.Name && bK.Sourcename==book.Sourcename)
                     {
                         MessageBox.Show("Do not add repeatedly.");
                         return;
@@ -180,7 +181,7 @@ namespace Books
                     ListViewItem lvi = new ListViewItem(book.Name);                 
                     lvi.ImageKey = book.Name;
                     lvi.Tag = book;
-                    lvi.ToolTipText = "作者:" + book.Author + Environment.NewLine + book.Des;
+                    lvi.ToolTipText = "作者:" + book.Author + Environment.NewLine + "源:" + book.RootSourcename + "[" + book.Sourcename + "]" + Environment.NewLine + "简介:" + book.Des;
                     listView1.Items.Add(lvi);
                     MessageBox.Show("Success.");
                 }
@@ -247,7 +248,7 @@ namespace Books
                     for (int i = listView1.SelectedItems.Count-1; i >-1 ; i--)
                     {
                         BookHelper.Book book = (BookHelper.Book)listView1.SelectedItems[i].Tag;
-                        string sql = string.Format("DELETE FROM Books WHERE Userid={0} AND Rootsourcename='{1}' AND Name = '{2}'", Configs.UserId, MyCryptography.DESEncrypt(book.RootSourcename), MyCryptography.DESEncrypt(listView1.SelectedItems[i].Text));
+                        string sql = string.Format("DELETE FROM Books WHERE Userid={0} AND Rootsourcename='{1}' AND Name = '{2}';DELETE FROM Chapters WHERE Userid={0} AND Rootsourcename='{1}' AND Bookname = '{2}';DELETE FROM Fictions WHERE Userid={0} AND Rootsourcename='{1}' AND Bookname = '{2}';", Configs.UserId, MyCryptography.DESEncrypt(book.RootSourcename), MyCryptography.DESEncrypt(listView1.SelectedItems[i].Text));
                         if (Configs.Sql.ExecuteNonQuery(sql) > 0)
                             listView1.SelectedItems[i].Remove();
                         else
@@ -290,7 +291,7 @@ namespace Books
             if(MessageBox.Show("Are you sure clean all datacache?", "Warning", MessageBoxButtons.YesNo,MessageBoxIcon.Warning) == DialogResult.OK)
             {
                 string sql = @"DELETE FROM Fictions;
-                           DELETE FROM Chapters;
+                           DELETE FROM ;
                            UPDATE sqlite_sequence set seq=0 where name='Fictions';
                            UPDATE sqlite_sequence set seq=0 where name='Chapters';
                            ";
@@ -368,11 +369,11 @@ namespace Books
                 return;
             }
             //*********************更新章节************************
-            string sql = string.Format("SELECT Chapter,Sectionurl FROM Chapters Where Bookname='{0}'", MyCryptography.DESEncrypt(book.Name));
+            string sql = string.Format("SELECT Chapter,Sectionurl FROM Chapters Where Userid='{0}' and Rootsourcename='{1}' and Bookname='{2}'",Configs.UserId, MyCryptography.DESEncrypt(book.RootSourcename), MyCryptography.DESEncrypt(book.Name));
             DataTable DT = Configs.Sql.ExecuteQuery(sql);
             if (DT.Rows.Count < Contents.Count)
             {
-                sql = string.Format("DELETE FROM Chapters WHERE Bookname='{0}';", MyCryptography.DESEncrypt(book.Name));
+                sql = string.Format("DELETE FROM Chapters WHERE Userid='{0}' and Rootsourcename='{1}' and Bookname='{2}'", Configs.UserId, MyCryptography.DESEncrypt(book.RootSourcename), MyCryptography.DESEncrypt(book.Name));
                 Configs.Sql.ExecuteNonQuery(sql);
 
                 List<SQLiteParameter[]> listParas = new List<SQLiteParameter[]>();
@@ -380,10 +381,10 @@ namespace Books
                 {
                     string Chapter = Contents[m].Key;
                     string Sectionurl = Contents[m].Value;
-                    SQLiteParameter[] Paras = new SQLiteParameter[] { new SQLiteParameter("@Bookname", MyCryptography.DESEncrypt(book.Name)), new SQLiteParameter("@Chapter", MyCryptography.DESEncrypt(Chapter)), new SQLiteParameter("@Sectionurl", MyCryptography.DESEncrypt(Sectionurl)) };
+                    SQLiteParameter[] Paras = new SQLiteParameter[] {new SQLiteParameter("@Userid",Configs.UserId),new SQLiteParameter("@Rootsourcename", MyCryptography.DESEncrypt(book.RootSourcename)), new SQLiteParameter("@Bookname", MyCryptography.DESEncrypt(book.Name)), new SQLiteParameter("@Sectionurl", MyCryptography.DESEncrypt(Sectionurl)), new SQLiteParameter("@Chapter", MyCryptography.DESEncrypt(Chapter)) };
                     listParas.Add(Paras);
                 }
-                sql = "INSERT INTO Chapters(Bookname,Chapter,Sectionurl) VALUES(@Bookname,@Chapter,@Sectionurl)";
+                sql = "INSERT INTO Chapters(Userid,Rootsourcename,Bookname,Sectionurl,Chapter) VALUES(@Userid,@Rootsourcename,@Bookname,@Sectionurl,@Chapter)";
                 Configs.Sql.ExecuteNonQueryBatch(sql, listParas);
             }
 
@@ -433,13 +434,13 @@ namespace Books
 
                 if (UpdataParas.Count > 10)
                 {
-                    sql = "UPDATE Fictions SET Section=@Section WHERE Bookname = @Bookname AND Chapter=@Chapter";
+                    sql = "UPDATE Fictions SET Section=@Section WHERE Userid = @Userid AND Rootsourcename = @Rootsourcename AND Bookname = @Bookname AND Chapter=@Chapter";
                     Configs.Sql.ExecuteNonQueryBatch(sql, UpdataParas);
                     UpdataParas.Clear();
                 }
                 if (InsertParas.Count > 10)
                 {
-                    sql = "INSERT INTO Fictions(Bookname,Chapter,Section) VALUES(@Bookname,@Chapter,@Section)";
+                    sql = "INSERT INTO Fictions(Userid,Rootsourcename,Bookname,Chapter,Section) VALUES(@Userid,@Rootsourcename,@Bookname,@Chapter,@Section)";
                     Configs.Sql.ExecuteNonQueryBatch(sql, InsertParas);
                     InsertParas.Clear();
                 }        
@@ -467,13 +468,13 @@ namespace Books
 
             if (UpdataParas.Count > 0)
             {
-                sql = "UPDATE Fictions SET Section=@Section WHERE Bookname = @Bookname AND Chapter=@Chapter";
+                sql = "UPDATE Fictions SET Section=@Section WHERE Userid = @Userid AND Rootsourcename = @Rootsourcename AND Bookname = @Bookname AND Chapter=@Chapter";
                 Configs.Sql.ExecuteNonQueryBatch(sql, UpdataParas);
                 UpdataParas.Clear();
             }
             if (InsertParas.Count > 0)
             {
-                sql = "INSERT INTO Fictions(Bookname,Chapter,Section) VALUES(@Bookname,@Chapter,@Section)";
+                sql = "INSERT INTO Fictions(Userid,Rootsourcename,Bookname,Chapter,Section) VALUES(@Userid,@Rootsourcename,@Bookname,@Chapter,@Section)";
                 Configs.Sql.ExecuteNonQueryBatch(sql, InsertParas);
                 InsertParas.Clear();
             }
@@ -494,7 +495,7 @@ namespace Books
         private void cacheContent(string Chapter, string Sectionurl, BookHelper.Book book)
         {
             string Section = "";
-            string sql = string.Format("SELECT Section FROM Fictions WHERE Bookname = '{0}' AND Chapter='{1}'", MyCryptography.DESEncrypt(book.Name), MyCryptography.DESEncrypt(Chapter));
+            string sql = string.Format("SELECT Section FROM Fictions WHERE Userid ={0} AND Rootsourcename = '{1}' AND Bookname = '{2}' AND Chapter='{3}'",Configs.UserId,MyCryptography.DESEncrypt(book.RootSourcename), MyCryptography.DESEncrypt(book.Name), MyCryptography.DESEncrypt(Chapter));
             DataTable DB = Configs.Sql.ExecuteQuery(sql);
             if (DB.Rows.Count > 0)
             {
@@ -502,13 +503,13 @@ namespace Books
                 if (Section.Length < 20)
                 {
                     Section = BookHelper.GetContentTxt(Sectionurl, book);
-                    UpdataParas.Add(new SQLiteParameter[] { new SQLiteParameter("@Bookname", MyCryptography.DESEncrypt(book.Name)), new SQLiteParameter("@Chapter", MyCryptography.DESEncrypt(Chapter)), new SQLiteParameter("@Section", MyCryptography.DESEncrypt(Section)) });
+                    UpdataParas.Add(new SQLiteParameter[] {new SQLiteParameter("@Userid",Configs.UserId),new SQLiteParameter("@Rootsourcename",MyCryptography.DESEncrypt(book.RootSourcename)), new SQLiteParameter("@Bookname", MyCryptography.DESEncrypt(book.Name)), new SQLiteParameter("@Chapter", MyCryptography.DESEncrypt(Chapter)), new SQLiteParameter("@Section", MyCryptography.DESEncrypt(Section)) });
                 }
             }
             else
             {
                 Section = BookHelper.GetContentTxt(Sectionurl, book);
-                InsertParas.Add(new SQLiteParameter[] { new SQLiteParameter("@Bookname", MyCryptography.DESEncrypt(book.Name)), new SQLiteParameter("@Chapter", MyCryptography.DESEncrypt(Chapter)), new SQLiteParameter("@Section", MyCryptography.DESEncrypt(Section)) });
+                InsertParas.Add(new SQLiteParameter[] { new SQLiteParameter("@Userid", Configs.UserId), new SQLiteParameter("@Rootsourcename", MyCryptography.DESEncrypt(book.RootSourcename)), new SQLiteParameter("@Bookname", MyCryptography.DESEncrypt(book.Name)), new SQLiteParameter("@Chapter", MyCryptography.DESEncrypt(Chapter)), new SQLiteParameter("@Section", MyCryptography.DESEncrypt(Section)) });
             }         
         }     
     }

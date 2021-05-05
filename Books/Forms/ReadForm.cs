@@ -52,7 +52,7 @@ namespace Books
 
         private void GetlocalBookContents()
         {
-            string sql = string.Format("SELECT Chapter,Sectionurl FROM Chapters Where Bookname='{0}'", MyCryptography.DESEncrypt(book.Name));
+            string sql = string.Format("SELECT Chapter,Sectionurl FROM Chapters Where Userid={0} and Rootsourcename='{1}' and Bookname='{2}'", Configs.UserId, MyCryptography.DESEncrypt(book.RootSourcename),MyCryptography.DESEncrypt(book.Name));
             DataTable DT = Configs.Sql.ExecuteQuery(sql);
             TreeNode localTN = new TreeNode(book.Name);
             if (DT.Rows.Count > 0)
@@ -104,7 +104,7 @@ namespace Books
                 readIndex = int.Parse(MyCryptography.DESDecrypt(DT.Rows[0][0].ToString()));
             }
 
-            sql = string.Format("DELETE FROM Chapters WHERE Bookname='{0}';", MyCryptography.DESEncrypt(book.Name));
+            sql = string.Format("DELETE FROM Chapters WHERE Userid={0} and Rootsourcename='{1}' and Bookname='{2}';",Configs.UserId, MyCryptography.DESEncrypt(book.RootSourcename), MyCryptography.DESEncrypt(book.Name));
             Configs.Sql.ExecuteNonQuery(sql);
 
             sql = "";
@@ -115,14 +115,14 @@ namespace Books
             {
                 string Chapter = Contents[m].Key;
                 string Sectionurl = Contents[m].Value;
-                SQLiteParameter[] Paras = new SQLiteParameter[] { new SQLiteParameter("@Bookname", MyCryptography.DESEncrypt(book.Name)), new SQLiteParameter("@Chapter", MyCryptography.DESEncrypt(Chapter)), new SQLiteParameter("@Sectionurl", MyCryptography.DESEncrypt(Sectionurl)) };
+                SQLiteParameter[] Paras = new SQLiteParameter[] {new SQLiteParameter("@Userid",Configs.UserId),new SQLiteParameter("@Rootsourcename", MyCryptography.DESEncrypt(book.RootSourcename)), new SQLiteParameter("@Bookname", MyCryptography.DESEncrypt(book.Name)), new SQLiteParameter("@Sectionurl", MyCryptography.DESEncrypt(Sectionurl)), new SQLiteParameter("@Chapter", MyCryptography.DESEncrypt(Chapter)) };
                 listParas.Add(Paras);
                 TreeNode subTN = new TreeNode(Chapter);
                 subTN.Tag = Sectionurl;
                 TN.Nodes.Add(subTN);
             }
 
-            sql = "INSERT INTO Chapters(Bookname,Chapter,Sectionurl) VALUES(@Bookname,@Chapter,@Sectionurl)";
+            sql = "INSERT INTO Chapters(Userid,Rootsourcename,Bookname,Sectionurl,Chapter) VALUES(@Userid,@Rootsourcename,@Bookname,@Sectionurl,@Chapter)";
             Configs.Sql.ExecuteNonQueryBatch(sql, listParas);
 
             if (treeView1.InvokeRequired)
@@ -156,7 +156,7 @@ namespace Books
                 string Chapter = treeView1.SelectedNode.Text;
                 string Chapterurl = treeView1.SelectedNode.Tag.ToString();
                 string Section = null;
-                string sql = string.Format("SELECT Section FROM Fictions WHERE Bookname = '{0}' AND Chapter='{1}'", MyCryptography.DESEncrypt(book.Name), MyCryptography.DESEncrypt(Chapter));
+                string sql = string.Format("SELECT Section FROM Fictions WHERE Userid={0} and Rootsourcename='{1}' and Bookname = '{2}' AND Chapter='{3}'",Configs.UserId,MyCryptography.DESEncrypt(book.RootSourcename), MyCryptography.DESEncrypt(book.Name), MyCryptography.DESEncrypt(Chapter));
                 DataTable DT = Configs.Sql.ExecuteQuery(sql);
                 if (DT.Rows.Count > 0)
                 {
@@ -185,14 +185,14 @@ namespace Books
         private string Getchapter(string Chapter,string Chapterurl)
         {
             string Section = BookHelper.GetContentTxt(Chapterurl, book);
-            string sql = string.Format("SELECT Section FROM Fictions WHERE Bookname = '{0}' AND Chapter='{1}'", MyCryptography.DESEncrypt(book.Name), MyCryptography.DESEncrypt(Chapter));
+            string sql = string.Format("SELECT Section FROM Fictions WHERE Userid={0} and Rootsourcename='{1}' and Bookname = '{2}' AND Chapter='{3}'", Configs.UserId, MyCryptography.DESEncrypt(book.RootSourcename), MyCryptography.DESEncrypt(book.Name), MyCryptography.DESEncrypt(Chapter));
             if (Configs.Sql.ExecuteNonQuery(sql) > 0)
             {
-                sql = string.Format("UPDATE Fictions SET Section='{0}' WHERE Bookname = '{1}' AND Chapter='{2}'",MyCryptography.DESEncrypt(Section), MyCryptography.DESEncrypt(book.Name), MyCryptography.DESEncrypt(Chapter));
+                sql = string.Format("UPDATE Fictions SET Section='{0}' WHERE Userid={1} and Rootsourcename='{2}' and Bookname = '{3}' AND Chapter='{4}'", MyCryptography.DESEncrypt(Section), Configs.UserId, MyCryptography.DESEncrypt(book.RootSourcename), MyCryptography.DESEncrypt(book.Name), MyCryptography.DESEncrypt(Chapter));
                 Configs.Sql.ExecuteNonQuery(sql);
             }else
             {
-                sql = string.Format("INSERT INTO Fictions(Bookname,Chapter,Section) VALUES('{0}','{1}','{2}')", MyCryptography.DESEncrypt(book.Name), MyCryptography.DESEncrypt(Chapter), MyCryptography.DESEncrypt(Section));
+                sql = string.Format("INSERT INTO Fictions(Userid,Rootsourcename,Bookname,Chapter,Section) VALUES({0},'{1}','{2}','{3}','{4}')", Configs.UserId, MyCryptography.DESEncrypt(book.RootSourcename), MyCryptography.DESEncrypt(book.Name), MyCryptography.DESEncrypt(Chapter), MyCryptography.DESEncrypt(Section));
                 Configs.Sql.ExecuteNonQuery(sql);
             }        
             return Section;
@@ -221,7 +221,7 @@ namespace Books
                         Chapterurl = treeView1.Nodes[0].Nodes[index].Tag.ToString();
                     }
                     string cach = null;
-                    string cachsql = string.Format("SELECT Section FROM Fictions WHERE Bookname = '{0}' AND Chapter='{1}'", MyCryptography.DESEncrypt(book.Name), MyCryptography.DESEncrypt(Chapter));
+                    string cachsql = string.Format("SELECT Section FROM Fictions WHERE Userid={0} and Rootsourcename='{1}' and Bookname = '{2}' AND Chapter='{3}'", Configs.UserId, MyCryptography.DESEncrypt(book.RootSourcename), MyCryptography.DESEncrypt(book.Name), MyCryptography.DESEncrypt(Chapter));
                     DataTable cachDT = Configs.Sql.ExecuteQuery(cachsql);
                     if (cachDT.Rows.Count > 0)
                     {
@@ -241,11 +241,11 @@ namespace Books
             {
                 MessageBox.Show("Already the first chapter");
                 return;
-            }else if (readindex > 0)
+            }else if (treeView1.SelectedNode.Parent.Nodes!=null && readindex > 0)
             {
                 readindex--;
                 treeView1.Cursor = Cursors.WaitCursor;
-                treeView1.SelectedNode = treeView1.Nodes[0].Nodes[readindex];
+                treeView1.SelectedNode = treeView1.SelectedNode.Parent.Nodes[readindex];
                 treeView1_DoubleClick(null, null);
                 richTextBox1.Select(0, 1);
                 richTextBox1.ScrollToCaret();
@@ -257,14 +257,14 @@ namespace Books
         {
             if (readindex > 0)
             {
-                if (readindex == treeView1.Nodes.Count - 1)
+                if (treeView1.SelectedNode.Parent.Nodes!=null && readindex == treeView1.SelectedNode.Parent.Nodes.Count - 1)
                 {
                     MessageBox.Show("Already the last chapter");
                     return;
                 }
                 readindex++;
                 treeView1.Cursor = Cursors.WaitCursor;
-                treeView1.SelectedNode = treeView1.Nodes[0].Nodes[readindex];
+                treeView1.SelectedNode = treeView1.SelectedNode.Parent.Nodes[readindex];
                 treeView1_DoubleClick(null, null);
                 richTextBox1.Select(0, 1);
                 richTextBox1.ScrollToCaret();
