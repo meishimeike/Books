@@ -107,7 +107,7 @@ namespace Books
                         Url  VARCHAR NOT NULL,
                         Author VARCHAR,
                         Coverurl VARCHAR,
-                        Coverpath VARCHAR,
+                        Coverbase64 VARCHAR,
                         Des VARCHAR,
                         Read VARCHAR
                     );";

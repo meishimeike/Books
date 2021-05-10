@@ -117,6 +117,7 @@ namespace Books
                         treeView1.SelectedNode.Nodes.Add(tn);
                     }
                 }
+
             }
             if (treeView1.SelectedNode.Level == 2)
             {
@@ -140,7 +141,7 @@ namespace Books
             {
                 BookHelper.Book book = books[i];
 
-                Image coverimage = null;           
+                Image coverimage;
                 if (File.Exists(book.Coverpath))
                 {
                     coverimage = BookHelper.ReadImageFile(book.Coverpath);

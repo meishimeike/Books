@@ -113,15 +113,12 @@ namespace Books
                     BK.Url= MyCryptography.DESDecrypt(DT.Rows[i][5].ToString());
                     BK.Author= MyCryptography.DESDecrypt(DT.Rows[i][6].ToString());
                     BK.Coverurl= MyCryptography.DESDecrypt(DT.Rows[i][7].ToString());
-                    BK.Coverpath= MyCryptography.DESDecrypt(DT.Rows[i][8].ToString());
+                    BK.Coverbase64 = DT.Rows[i][8].ToString();
                     BK.Des= MyCryptography.DESDecrypt(DT.Rows[i][9].ToString());
                     BK.Read = int.Parse(MyCryptography.DESDecrypt(DT.Rows[i][10].ToString()));
 
                     ListViewItem lvi = new ListViewItem(BK.Name);
-                    if (File.Exists(BK.Coverpath))
-                        imageList1.Images.Add(BK.Name,BookHelper.ReadImageFile(BK.Coverpath));
-                    else
-                        imageList1.Images.Add(BK.Name, Properties.Resources._null);
+                    imageList1.Images.Add(BK.Name, BookHelper.Base64ToImage(BK.Coverbase64));
                     lvi.ImageKey = BK.Name;
                     lvi.Tag = BK;
                     lvi.ToolTipText = "作者:" + BK.Author + Environment.NewLine + "源:" + BK.RootSourcename + "[" + BK.Sourcename + "]" + Environment.NewLine + "简介:" + BK.Des;
@@ -153,28 +150,12 @@ namespace Books
                         return;
                     }
                 }
-                string sql = string.Format("INSERT INTO Books(Userid,Rootsourcename,Sourcename,Name,Url,Author,Coverurl,Coverpath,Des,Read) VALUES({0},\'{1}\',\'{2}\',\'{3}\',\'{4}\',\'{5}\',\'{6}\',\'{7}\',\'{8}\',\'{9}\')", Configs.UserId, MyCryptography.DESEncrypt(book.RootSourcename), MyCryptography.DESEncrypt(book.Sourcename), MyCryptography.DESEncrypt(book.Name), MyCryptography.DESEncrypt(book.Url), MyCryptography.DESEncrypt(book.Author), MyCryptography.DESEncrypt(book.Coverurl), MyCryptography.DESEncrypt(book.Coverpath), MyCryptography.DESEncrypt(book.Des), MyCryptography.DESEncrypt("0"));
+                string Coverbase64 = BookHelper.ImageToBase64(book.Coverpath);
+
+                string sql = string.Format("INSERT INTO Books(Userid,Rootsourcename,Sourcename,Name,Url,Author,Coverurl,Coverbase64,Des,Read) VALUES({0},\'{1}\',\'{2}\',\'{3}\',\'{4}\',\'{5}\',\'{6}\',\'{7}\',\'{8}\',\'{9}\')", Configs.UserId, MyCryptography.DESEncrypt(book.RootSourcename), MyCryptography.DESEncrypt(book.Sourcename), MyCryptography.DESEncrypt(book.Name), MyCryptography.DESEncrypt(book.Url), MyCryptography.DESEncrypt(book.Author), MyCryptography.DESEncrypt(book.Coverurl), Coverbase64, MyCryptography.DESEncrypt(book.Des), MyCryptography.DESEncrypt("0"));
                 if (Configs.Sql.ExecuteNonQuery(sql) > 0)
                 {
-                    Image coverimage = null;
-                    if (File.Exists(book.Coverpath))
-                    {
-                        try
-                        {
-                            Stream s = File.Open(book.Coverpath, FileMode.Open);
-                            coverimage = Image.FromStream(s);
-                            s.Close();
-                            s.Dispose();
-                        }
-                        catch (Exception)
-                        {
-                            coverimage = new Bitmap(Properties.Resources._null);
-                        }
-                    }
-                    else
-                    {
-                        coverimage = new Bitmap(Properties.Resources._null);
-                    }
+                    Image coverimage = BookHelper.Base64ToImage(Coverbase64);             
                     imageList1.Images.Add(book.Name, coverimage);
                     coverimage.Dispose();
 

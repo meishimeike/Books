@@ -28,26 +28,27 @@ namespace BookHelperLib
 
         public class netProxy
         {
-            public bool Enable { get; set; }
-            public string Type { get; set; }
-            public string Host { get; set; }
-            public int Port { get; set; }
-            public string Username { get; set; }
-            public string Password { get; set; }
+            public bool Enable;
+            public string Type;
+            public string Host;
+            public int Port;
+            public string Username;
+            public string Password;
         }
         public class RootSource
         {
             /// <summary>
             /// Source File Name
             /// </summary>
-            public string RootName { get; set; }
-            public List<bookSource> Source { get; set; }
+            public string RootName;       
+            public List<bookSource> Source;
         }
         public struct Book
         {
             public string Name;
             public string Author;
             public string Coverurl;
+            public string Coverbase64;
             public string Coverpath;
             public string Des;
             public string Url;
@@ -57,46 +58,46 @@ namespace BookHelperLib
         }
         public class bookSource
         {
-            public string sourceName { get; set; }
-            public string sourceUrl { get; set; }
-            public string sorts { get; set; }
-            public ruleSort ruleSort { get; set; }
-            public ruleBook ruleBook { get; set; }
-            public ruleChapter ruleChapter { get; set; }
-            public ruleContentTxt ruleContentTxt { get; set; }
-            public ruleSearch ruleSearch { get; set; }
+            public string sourceName;
+            public string sourceUrl;
+            public string sorts;
+            public ruleSort ruleSort;
+            public ruleBook ruleBook;
+            public ruleChapter ruleChapter;
+            public ruleContentTxt ruleContentTxt;
+            public ruleSearch ruleSearch;
         }
         public class ruleSort
         {
-            public string booklist { get; set; }
-            public string books { get; set; }
-            public string page { get; set; }          
+            public string booklist;
+            public string books;
+            public string page;          
             
         }
         public class ruleBook
         {
-            public string author { get; set; }
-            public string bookimg { get; set; }
-            public string des { get; set; }          
-            public string url { get; set; }
+            public string author;
+            public string bookimg;
+            public string des;          
+            public string url;
         }
         public class ruleChapter
         {
-            public string chapter { get; set; }
+            public string chapter;
         }
         public class ruleContentTxt
         {
-            public string content { get; set; }
-            public string nextpage { get; set; }
+            public string content;
+            public string nextpage;
         }
         public class ruleSearch
         {
-            public string url { get; set; }
-            public string method { get; set; }
-            public string searchkey { get; set; }
-            public string booklist { get; set; }
-            public string bookurl { get; set; }
-            public string page { get; set; }
+            public string url;
+            public string method;
+            public string searchkey;
+            public string booklist;
+            public string bookurl;
+            public string page;
         }
         public class JsonUtil
         {
@@ -156,8 +157,9 @@ namespace BookHelperLib
             }
             HAP.HtmlDocument maindoc = new HAP.HtmlDocument();
             maindoc.LoadHtml(maindocstr);
-            string[] exp = BS.sorts.Split('|');
+            if (maindoc == null) return null;
             List<KeyValuePair<string, string>> sort = new List<KeyValuePair<string, string>>();
+            string[] exp = BS.sorts.Split('|');           
             for (int m = 0; m < exp.Length; m++)
             {
                 HAP.HtmlNodeCollection woods = maindoc.DocumentNode.SelectNodes(exp[m]);
@@ -251,11 +253,14 @@ namespace BookHelperLib
             }
 
             List<KeyValuePair<string, string>> PagesList = new List<KeyValuePair<string, string>>();
-            for (int m = 0; m < Pages.Count; m++)
+            if (Pages != null)
             {
-                string page = Pages[m].InnerText;
-                string pageurl = Pages[m].Attributes["href"].Value;
-                PagesList.Add(new KeyValuePair<string, string>(page, pageurl));
+                for (int m = 0; m < Pages.Count; m++)
+                {
+                    string page = Pages[m].InnerText;
+                    string pageurl = Pages[m].Attributes["href"].Value;
+                    PagesList.Add(new KeyValuePair<string, string>(page, pageurl));
+                }
             }
             PList = PagesList;
             return BooksList;
@@ -646,7 +651,7 @@ namespace BookHelperLib
         /// <param name="url">网址</param>
         /// <param name="n">重试次数</param>
         /// <returns>网页内容</returns>
-        public static string GetRequst(string url,int n=3)
+        public static string GetRequst(string url, int n = 3)
         {
             if (File.Exists(url))
             {
@@ -663,30 +668,29 @@ namespace BookHelperLib
         /// <returns>网页内容</returns>
         public static string GetRequst(Uri url,int n=3)
         {
-            
-            HttpClient Hclient = GetHttpClient();
 
-            //尝试3次，都失败，返回空
-            for(int i = 0; i < n; i++)
+            using (HttpClient Hclient = GetHttpClient())
             {
-                try
+                //尝试3次，都失败，返回空
+                for (int i = 0; i < n; i++)
                 {
-                    string result = Hclient.GetStringAsync(url).Result;
-
-                    if (!string.IsNullOrWhiteSpace(result))
+                    try
                     {
-                        Hclient.Dispose();
-                        return result;
+                        string result = Hclient.GetStringAsync(url).Result;
+
+                        if (!string.IsNullOrWhiteSpace(result))
+                        {
+                            return result;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logsadd(e.Message);
+                        continue;
                     }
                 }
-                catch (Exception e)
-                {
-                    Logsadd(e.Message);
-                    continue;
-                }
+                return "";
             }
-            Hclient.Dispose();
-            return "";
         }
         
         public static string DataRequst(string url,string Method, List<KeyValuePair<string, string>> param, out string responseUrl, string cookie = "")
@@ -720,16 +724,18 @@ namespace BookHelperLib
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             try
             {
-                HttpClient Hclient = GetHttpClient();
-                HttpContent cont = new FormUrlEncodedContent(param);
-                cont.Headers.Add("HttpRequestHeader.ContentType", "application/x-www-form-urlencoded; charset=UTF-8");
-                //cont.Headers.Add("HttpRequestHeader.Cookie", cookie);               
-                System.Threading.Tasks.Task<HttpResponseMessage> responseMessage = Hclient.PostAsync(url, cont);
-                responseMessage.Wait();
-                System.Threading.Tasks.Task<string> reString = responseMessage.Result.Content.ReadAsStringAsync();
-                reString.Wait();
-                responseUrl = responseMessage.Result.RequestMessage.RequestUri.ToString();
-                return reString.Result;
+                using (HttpClient Hclient = GetHttpClient())
+                {
+                    HttpContent cont = new FormUrlEncodedContent(param);
+                    cont.Headers.Add("HttpRequestHeader.ContentType", "application/x-www-form-urlencoded; charset=UTF-8");
+                    //cont.Headers.Add("HttpRequestHeader.Cookie", cookie);               
+                    System.Threading.Tasks.Task<HttpResponseMessage> responseMessage = Hclient.PostAsync(url, cont);
+                    responseMessage.Wait();
+                    System.Threading.Tasks.Task<string> reString = responseMessage.Result.Content.ReadAsStringAsync();
+                    reString.Wait();
+                    responseUrl = responseMessage.Result.RequestMessage.RequestUri.ToString();
+                    return reString.Result;
+                }              
             }
             catch (Exception e)
             {

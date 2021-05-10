@@ -200,9 +200,10 @@ namespace Books
 
         private void CachSection(int index,int Count)
         {
-            for (int i = 1; i < 6; i++)
+            int n = 6;
+            while (n-- > 0)
             {
-                index += i;              
+                index += 1;
                 if (index < Count)
                 {
                     string Chapter = null;
@@ -255,7 +256,7 @@ namespace Books
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (readindex > 0)
+            if (readindex >= 0)
             {
                 if (treeView1.SelectedNode.Parent.Nodes!=null && readindex == treeView1.SelectedNode.Parent.Nodes.Count - 1)
                 {
