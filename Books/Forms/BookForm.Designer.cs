@@ -145,13 +145,13 @@
             this.toolStripDropDownButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton3.Image")));
             this.toolStripDropDownButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton3.Name = "toolStripDropDownButton3";
-            this.toolStripDropDownButton3.Size = new System.Drawing.Size(68, 22);
-            this.toolStripDropDownButton3.Text = "Tools(&T)";
+            this.toolStripDropDownButton3.Size = new System.Drawing.Size(79, 22);
+            this.toolStripDropDownButton3.Text = "Option(&O)";
             // 
             // setProxyToolStripMenuItem
             // 
             this.setProxyToolStripMenuItem.Name = "setProxyToolStripMenuItem";
-            this.setProxyToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.setProxyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.setProxyToolStripMenuItem.Text = "Set Proxy(&S)";
             this.setProxyToolStripMenuItem.Click += new System.EventHandler(this.setProxyToolStripMenuItem_Click);
             // 

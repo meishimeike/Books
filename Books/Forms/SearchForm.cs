@@ -237,7 +237,7 @@ namespace Books
             {
                 BookHelper.Book book = books[i];
 
-                Image coverimage = null;
+                Image coverimage;
                 if (File.Exists(book.Coverpath))
                 {
                     coverimage = BookHelper.ReadImageFile(book.Coverpath);
