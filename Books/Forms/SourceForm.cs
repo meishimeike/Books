@@ -26,14 +26,14 @@ namespace Books
             string content = BookHelper.GetRequst(sourceurl);
             if (string.IsNullOrWhiteSpace(content))
             {
-                MessageBox.Show("AAdd source fails, please check the address is correct");
+                MessageBox.Show("源添加失败,请检查源地址是否正确.");
                 return;
             }
             string sql = string.Format("INSERT INTO Sources(Userid,Name,Address,Content) VALUES('{0}','{1}','{2}','{3}')", Configs.UserId, MyCryptography.DESEncrypt(sourcename), MyCryptography.DESEncrypt(sourceurl), MyCryptography.DESEncrypt(content));
             if (Configs.Sql.ExecuteNonQuery(sql) < 1)
             {
-                MessageBox.Show("Sqlite failure,Add source failure");
-                BookHelper.Logsadd("Sqlite failure,Add source failure");
+                MessageBox.Show("Sqlite 错误,源添加失败.");
+                BookHelper.Logsadd("Sqlite 错误,源添加失败.");
                 return;
             }
             BookHelper.AddSoucerAdress(sourcename, sourceurl, content);
@@ -43,8 +43,8 @@ namespace Books
 
         private void SourceForm_Load(object sender, EventArgs e)
         {
-            listView1.Columns.Add("Source Name");
-            listView1.Columns.Add("Source URL");
+            listView1.Columns.Add("源名称");
+            listView1.Columns.Add("源地址");
             SourceForm_Resize(null, null);
             List<KeyValuePair<string, string>> sources = BookHelper.GetSoucerAdress();
             for(int i = 0; i < sources.Count; i++)
@@ -72,7 +72,7 @@ namespace Books
         {
             if (listView1.SelectedItems.Count > 0)
             {
-                if(MessageBox.Show("Are you sure you want to delete the selected items", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if(MessageBox.Show("您确定要删除选中的源吗?", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     for(int i=0;i< listView1.SelectedItems.Count; i++)
                     {
@@ -84,7 +84,7 @@ namespace Books
                             delSource(rootsourcename);
                         }       
                         else
-                            MessageBox.Show("Delete Faile");
+                            MessageBox.Show("删除失败!");
                     }
                 }
             }

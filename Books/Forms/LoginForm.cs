@@ -24,24 +24,24 @@ namespace Books
             string password = textBox2.Text.Trim();
             if (username == "" || password == "") 
             {
-                MessageBox.Show("Username or Password is null", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                BookHelper.Logsadd("Username or Password is null" + " Test:" + textBox1.Text + "," + textBox2.Text);
+                MessageBox.Show("用户名和密码不能为空", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                BookHelper.Logsadd("用户名和密码不能为空，尝试登录:" + textBox1.Text + "," + textBox2.Text);
                 return;
             }
             string sql = string.Format("SELECT Id FROM Users WHERE Username = '{0}'", MyCryptography.DESEncrypt(username));
             DataTable DT = Configs.Sql.ExecuteQuery(sql);
             if (DT.Rows.Count==0) 
             {
-                MessageBox.Show("Username is not exist", "Warning",MessageBoxButtons.OK,MessageBoxIcon.Warning);
-                BookHelper.Logsadd("Username is not exist,Test:" + username + "," + password);
+                MessageBox.Show("用户名不存在", "警告",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                BookHelper.Logsadd("用户名不存在,尝试登录:" + username + "," + password);
                 return;
             }
             sql = string.Format("SELECT Id FROM Users WHERE Username = '{0}' AND Password = '{1}'", MyCryptography.DESEncrypt(username),MD5Helper.EncryptString(password));
             DT = Configs.Sql.ExecuteQuery(sql);
             if (DT.Rows.Count == 0)
             {
-                MessageBox.Show("Password is error", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                BookHelper.Logsadd("Password is error" + " Test:" + username + "," + password);
+                MessageBox.Show("密码错误", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                BookHelper.Logsadd("密码错误，尝试登录:" + username + "," + password);
                 return;
             }else
             {

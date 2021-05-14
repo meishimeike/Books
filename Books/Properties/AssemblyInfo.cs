@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("Books")]
-[assembly: AssemblyDescription("Software for Read Book,You need add source.")]
+[assembly: AssemblyDescription("用于看书,需要自行添加书源")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Books")]

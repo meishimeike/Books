@@ -73,42 +73,42 @@
             this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            this.toolStripDropDownButton1.Size = new System.Drawing.Size(54, 22);
-            this.toolStripDropDownButton1.Text = "File(&F)";
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(59, 22);
+            this.toolStripDropDownButton1.Text = "文件(&F)";
             // 
             // importDataToolStripMenuItem
             // 
             this.importDataToolStripMenuItem.Name = "importDataToolStripMenuItem";
-            this.importDataToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.importDataToolStripMenuItem.Text = "Import Data";
+            this.importDataToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.importDataToolStripMenuItem.Text = "导入数据";
             this.importDataToolStripMenuItem.Click += new System.EventHandler(this.importDataToolStripMenuItem_Click);
             // 
             // exportDataToolStripMenuItem
             // 
             this.exportDataToolStripMenuItem.Name = "exportDataToolStripMenuItem";
-            this.exportDataToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.exportDataToolStripMenuItem.Text = "Export Data";
+            this.exportDataToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.exportDataToolStripMenuItem.Text = "导出数据";
             this.exportDataToolStripMenuItem.Click += new System.EventHandler(this.exportDataToolStripMenuItem_Click);
             // 
             // updataUToolStripMenuItem
             // 
             this.updataUToolStripMenuItem.Name = "updataUToolStripMenuItem";
-            this.updataUToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.updataUToolStripMenuItem.Text = "Updata(&U)";
+            this.updataUToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.updataUToolStripMenuItem.Text = "更新";
             this.updataUToolStripMenuItem.Click += new System.EventHandler(this.updataUToolStripMenuItem_Click);
             // 
             // clearCacheToolStripMenuItem
             // 
             this.clearCacheToolStripMenuItem.Name = "clearCacheToolStripMenuItem";
-            this.clearCacheToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.clearCacheToolStripMenuItem.Text = "Clear cache(&C)";
+            this.clearCacheToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.clearCacheToolStripMenuItem.Text = "清除缓存";
             this.clearCacheToolStripMenuItem.Click += new System.EventHandler(this.clearCacheToolStripMenuItem_Click);
             // 
             // exitEToolStripMenuItem
             // 
             this.exitEToolStripMenuItem.Name = "exitEToolStripMenuItem";
-            this.exitEToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.exitEToolStripMenuItem.Text = "Exit(&E)";
+            this.exitEToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.exitEToolStripMenuItem.Text = "退出";
             this.exitEToolStripMenuItem.Click += new System.EventHandler(this.exitEToolStripMenuItem_Click);
             // 
             // toolStripDropDownButton2
@@ -120,21 +120,21 @@
             this.toolStripDropDownButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton2.Image")));
             this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton2.Name = "toolStripDropDownButton2";
-            this.toolStripDropDownButton2.Size = new System.Drawing.Size(58, 22);
-            this.toolStripDropDownButton2.Text = "Edit(&E)";
+            this.toolStripDropDownButton2.Size = new System.Drawing.Size(60, 22);
+            this.toolStripDropDownButton2.Text = "编辑(&E)";
             // 
             // sourceSToolStripMenuItem
             // 
             this.sourceSToolStripMenuItem.Name = "sourceSToolStripMenuItem";
-            this.sourceSToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.sourceSToolStripMenuItem.Text = "Source(&O)";
+            this.sourceSToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sourceSToolStripMenuItem.Text = "管理书源";
             this.sourceSToolStripMenuItem.Click += new System.EventHandler(this.sourceSToolStripMenuItem_Click);
             // 
             // booksToolStripMenuItem
             // 
             this.booksToolStripMenuItem.Name = "booksToolStripMenuItem";
-            this.booksToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.booksToolStripMenuItem.Text = "Add Book(&S)";
+            this.booksToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.booksToolStripMenuItem.Text = "添加书";
             this.booksToolStripMenuItem.Click += new System.EventHandler(this.booksToolStripMenuItem_Click);
             // 
             // toolStripDropDownButton3
@@ -145,14 +145,14 @@
             this.toolStripDropDownButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton3.Image")));
             this.toolStripDropDownButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton3.Name = "toolStripDropDownButton3";
-            this.toolStripDropDownButton3.Size = new System.Drawing.Size(79, 22);
-            this.toolStripDropDownButton3.Text = "Option(&O)";
+            this.toolStripDropDownButton3.Size = new System.Drawing.Size(63, 22);
+            this.toolStripDropDownButton3.Text = "选项(&O)";
             // 
             // setProxyToolStripMenuItem
             // 
             this.setProxyToolStripMenuItem.Name = "setProxyToolStripMenuItem";
-            this.setProxyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.setProxyToolStripMenuItem.Text = "Set Proxy(&S)";
+            this.setProxyToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.setProxyToolStripMenuItem.Text = "设置代理";
             this.setProxyToolStripMenuItem.Click += new System.EventHandler(this.setProxyToolStripMenuItem_Click);
             // 
             // toolStrip1
@@ -176,14 +176,14 @@
             this.toolStripDropDownButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton4.Image")));
             this.toolStripDropDownButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton4.Name = "toolStripDropDownButton4";
-            this.toolStripDropDownButton4.Size = new System.Drawing.Size(65, 22);
-            this.toolStripDropDownButton4.Text = "Help(H)";
+            this.toolStripDropDownButton4.Size = new System.Drawing.Size(62, 22);
+            this.toolStripDropDownButton4.Text = "帮助(H)";
             // 
             // aboutAToolStripMenuItem
             // 
             this.aboutAToolStripMenuItem.Name = "aboutAToolStripMenuItem";
-            this.aboutAToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
-            this.aboutAToolStripMenuItem.Text = "About(&A)";
+            this.aboutAToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.aboutAToolStripMenuItem.Text = "关于";
             this.aboutAToolStripMenuItem.Click += new System.EventHandler(this.aboutAToolStripMenuItem_Click);
             // 
             // groupBox1
@@ -197,7 +197,7 @@
             this.groupBox1.Size = new System.Drawing.Size(769, 389);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "My Books";
+            this.groupBox1.Text = "我的书";
             // 
             // listView1
             // 
@@ -273,14 +273,14 @@
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(46, 17);
-            this.toolStripStatusLabel1.Text = "Status:";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(35, 17);
+            this.toolStripStatusLabel1.Text = "状态:";
             // 
             // toolStripStatusLabel2
             // 
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(55, 17);
-            this.toolStripStatusLabel2.Text = "No jobs";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(56, 17);
+            this.toolStripStatusLabel2.Text = "没有工作";
             // 
             // BookForm
             // 

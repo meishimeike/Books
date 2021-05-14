@@ -48,7 +48,7 @@ namespace Books
                 }
             }else
             {
-                MessageBox.Show("Please add source.");
+                MessageBox.Show("请添加源.");
             }
             
         }
@@ -155,7 +155,7 @@ namespace Books
                 ListViewItem lvi = new ListViewItem(book.Name);
                 lvi.Tag = book;
                 lvi.ImageKey = book.Name;
-                lvi.ToolTipText = "作者:" + book.Author + Environment.NewLine + "源:" + book.RootSourcename + "[" + book.Sourcename + "]" + Environment.NewLine + "简介:" + book.Des;
+                lvi.ToolTipText = "作者:" + book.Author + Environment.NewLine + "源:" + "[" + book.RootSourcename + "]" + "『" + book.Sourcename + "』" + Environment.NewLine + "简介:" + book.Des;
                 listView1.Items.Add(lvi);
             }
             AddControl(rootname, sourcename, Pages);          
@@ -251,7 +251,7 @@ namespace Books
                 ListViewItem lvi = new ListViewItem(book.Name);
                 lvi.Tag = book;
                 lvi.ImageKey = book.Name;
-                lvi.ToolTipText = "作者:" + book.Author + Environment.NewLine + "源:" + book.RootSourcename + "[" + book.Sourcename + "]" + Environment.NewLine + "简介:" + book.Des;
+                lvi.ToolTipText = "作者:" + book.Author + Environment.NewLine + "源:" + "[" + book.RootSourcename + "]" + "『" + book.Sourcename + "』" + Environment.NewLine + "简介:" + book.Des;
                 listView1.Items.Add(lvi);         
             }
 

@@ -49,12 +49,13 @@
             this.groupBox1.Size = new System.Drawing.Size(350, 262);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Source List";
+            this.groupBox1.Text = "源清单";
             // 
             // listView1
             // 
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.FullRowSelect = true;
+            this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(3, 17);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(344, 242);
@@ -73,7 +74,7 @@
             this.groupBox2.Size = new System.Drawing.Size(129, 262);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Edite";
+            this.groupBox2.Text = "操作";
             // 
             // button3
             // 
@@ -81,7 +82,7 @@
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 2;
-            this.button3.Text = "Del";
+            this.button3.Text = "删除";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -91,7 +92,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
-            this.button1.Text = "Add";
+            this.button1.Text = "添加";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -105,7 +106,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SourceForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "SourceForm";
+            this.Text = "源管理";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SourceForm_FormClosed);
             this.Load += new System.EventHandler(this.SourceForm_Load);
             this.Resize += new System.EventHandler(this.SourceForm_Resize);

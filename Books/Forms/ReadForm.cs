@@ -78,7 +78,7 @@ namespace Books
                 treeView1_DoubleClick(null, null);
             }else
             {
-                richTextBox1.Text= "No local data, start requesting network data, please wait";
+                richTextBox1.Text= "没有本地数据,开始从网络获取,请等待...";
                 treeView1.Cursor = Cursors.WaitCursor;
             }
 
@@ -240,7 +240,7 @@ namespace Books
         {
             if (readindex == 0)
             {
-                MessageBox.Show("Already the first chapter");
+                MessageBox.Show("已是第一章");
                 return;
             }else if (treeView1.SelectedNode.Parent.Nodes!=null && readindex > 0)
             {
@@ -260,7 +260,7 @@ namespace Books
             {
                 if (treeView1.SelectedNode.Parent.Nodes!=null && readindex == treeView1.SelectedNode.Parent.Nodes.Count - 1)
                 {
-                    MessageBox.Show("Already the last chapter");
+                    MessageBox.Show("已是最后一章");
                     return;
                 }
                 readindex++;
