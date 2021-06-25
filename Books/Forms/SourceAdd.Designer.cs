@@ -44,9 +44,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(34, 64);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 12);
+            this.label1.Size = new System.Drawing.Size(35, 12);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Source Name:";
+            this.label1.Text = "源名:";
             // 
             // textBox1
             // 
@@ -68,9 +68,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(34, 106);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(71, 12);
+            this.label2.Size = new System.Drawing.Size(47, 12);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Source Url:";
+            this.label2.Text = "源地址:";
             // 
             // button1
             // 
@@ -78,7 +78,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 4;
-            this.button1.Text = "Add";
+            this.button1.Text = "添加";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -88,10 +88,10 @@
             this.radioButton1.Checked = true;
             this.radioButton1.Location = new System.Drawing.Point(36, 23);
             this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(95, 16);
+            this.radioButton1.Size = new System.Drawing.Size(71, 16);
             this.radioButton1.TabIndex = 5;
             this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Internet Url";
+            this.radioButton1.Text = "网络地址";
             this.radioButton1.UseVisualStyleBackColor = true;
             this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
             // 
@@ -100,9 +100,9 @@
             this.radioButton2.AutoSize = true;
             this.radioButton2.Location = new System.Drawing.Point(184, 23);
             this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(83, 16);
+            this.radioButton2.Size = new System.Drawing.Size(71, 16);
             this.radioButton2.TabIndex = 6;
-            this.radioButton2.Text = "Local File";
+            this.radioButton2.Text = "本地文件";
             this.radioButton2.UseVisualStyleBackColor = true;
             this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
             // 
@@ -114,7 +114,7 @@
             this.linkLabel1.Size = new System.Drawing.Size(47, 12);
             this.linkLabel1.TabIndex = 7;
             this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Loading";
+            this.linkLabel1.Text = "浏览...";
             this.linkLabel1.Visible = false;
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
@@ -137,7 +137,7 @@
             this.MinimizeBox = false;
             this.Name = "SourceAdd";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "SourceAdd";
+            this.Text = "添加源";
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -152,7 +152,6 @@ namespace BookHelperLib
             string maindocstr = GetRequst(mainurl);
             if (string.IsNullOrWhiteSpace(maindocstr))
             {
-                Logsadd("Failed to get website content, please check network.");
                 return null;
             }
             HAP.HtmlDocument maindoc = new HAP.HtmlDocument();
@@ -197,7 +196,8 @@ namespace BookHelperLib
             string reurlstr = GetRequst(Listurl);
             if (string.IsNullOrWhiteSpace(reurlstr))
             {
-                throw new Exception("Failed to get website content, please check network.");
+                PList = null;
+                return null;
             }
             HAP.HtmlDocument doc = new HAP.HtmlDocument();
             doc.LoadHtml(reurlstr);
@@ -259,6 +259,9 @@ namespace BookHelperLib
                 {
                     string page = Pages[m].InnerText;
                     string pageurl = Pages[m].Attributes["href"].Value;
+                    if (page.Substring(0, 1) == "&") continue;
+                    if (string.IsNullOrWhiteSpace(pageurl) || pageurl.Contains("java")) continue;
+                    pageurl = GetAllUrl(pageurl,Listurl);
                     PagesList.Add(new KeyValuePair<string, string>(page, pageurl));
                 }
             }
@@ -354,7 +357,6 @@ namespace BookHelperLib
             string reurlstr = GetRequst(url);
             if (string.IsNullOrWhiteSpace(reurlstr))
             {
-                Logsadd("Failed to get website content, please check network.");
                 return;
             }
             HAP.HtmlDocument bookinfo = new HAP.HtmlDocument();
@@ -372,7 +374,13 @@ namespace BookHelperLib
             }
 
             book.Coverurl = imgurl;
-            book.Coverpath = CoverSavePath + book.Name + Path.GetExtension(book.Coverurl);
+            string tempname = Books.MD5Helper.EncryptString(imgurl);
+            string bname = tempname.Length > 10 ? tempname.Substring(0, 10) : tempname;
+            string ext = Path.GetExtension(imgurl);
+            if (ext == "") ext = ".jpg";
+
+            book.Coverpath = CoverSavePath + bname + ext;
+
             book.Des = bookinfo.DocumentNode.SelectSingleNode(BS.ruleBook.des).InnerText;
             book.Author = bookinfo.DocumentNode.SelectSingleNode(BS.ruleBook.author).InnerText;      
             BooksList.Add(book);
@@ -386,7 +394,6 @@ namespace BookHelperLib
             string docstr = GetRequst(Url);
             if (string.IsNullOrWhiteSpace(docstr))
             {
-                Logsadd("Failed to get website content, please check network.");
                 return null;
             }
             HAP.HtmlDocument doc = new HAP.HtmlDocument();
@@ -443,7 +450,6 @@ namespace BookHelperLib
             string res =GetRequst(url);
             if (string.IsNullOrWhiteSpace(res))
             {
-                Logsadd("Failed to get website content, please check network.");
                 return null;
             }
             HAP.HtmlDocument doc = new HAP.HtmlDocument();
@@ -458,7 +464,7 @@ namespace BookHelperLib
                 {
                     string nexturl = doc.DocumentNode.SelectSingleNode(BSource.ruleContentTxt.nextpage).Attributes["href"].Value;
                     if (!string.IsNullOrWhiteSpace(nexturl))
-                        Txt += GetContentTxt(GetAllUrl(nexturl, new Uri(url)), book);
+                        Txt += GetContentTxt(GetAllUrl(nexturl, url), book);
                 }       
             }
 
@@ -629,21 +635,25 @@ namespace BookHelperLib
         /// <param name="Testurl">测试链接</param>
         /// <param name="Url">主页地址</param>
         /// <returns></returns>
-        private static string GetAllUrl(string Testurl,Uri Url)
+        private static string GetAllUrl(string Testurl,string url)
         {
-            string NewUrl = null;
+            string headurl = url.Substring(0, url.LastIndexOf("/"));
+            if (Regex.Match(Testurl, "^http").Length > 0)
+            {
+                return Testurl;
+            }
             if (Regex.Match(Testurl, "^//").Length > 0)
             {
-                NewUrl = Url.Scheme + ":" + Testurl;
+                Uri Url = new Uri(url);
+               return Url.Scheme + ":" + Testurl;
             }
-            else if (Regex.Match(Testurl, "^/").Length > 0)
+            if (Regex.Match(Testurl, "^/").Length > 0)
             {
-                NewUrl = Url.Scheme + "://" + Url.Host + Testurl;
-            }else
-            {
-                NewUrl = Url.ToString();
+                Uri Url = new Uri(url);
+                return Url.Scheme + "://" + Url.Host + Testurl;
             }
-            return NewUrl;
+            return headurl + Testurl;
+            
         }
         /// <summary>
         /// Get方式获取网页内容
@@ -683,9 +693,8 @@ namespace BookHelperLib
                             return result;
                         }
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-                        Logsadd(e.Message);
                         continue;
                     }
                 }
@@ -737,9 +746,8 @@ namespace BookHelperLib
                     return reString.Result;
                 }              
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Logsadd(e.Message);
                 responseUrl = null;
                 return "";
             }           
@@ -771,13 +779,12 @@ namespace BookHelperLib
                         return;
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    if (File.Exists(filename))
-                    {
-                        File.Delete(filename);
-                    }
-                    Logsadd(e.Message);
+                    //if (File.Exists(filename))
+                    //{
+                    //    File.Delete(filename);
+                    //}
                     continue;
                 }
             }
@@ -816,37 +823,6 @@ namespace BookHelperLib
         }
         #endregion
 
-        #region 记录异常信息日志
-        /// <summary>
-        /// 设置日志保存地址
-        /// </summary>
-        /// <param name="pathname">保存文件名(默认当前运行目录下)</param>
-        public static void SetLogsPath(string pathname)
-        {
-            if (File.Exists(pathname))
-            {
-                LogsPath = pathname;
-            }
-        }
-        /// <summary>
-        /// 添加日志
-        /// </summary>
-        /// <param name="log">日志信息</param>
-        public static void Logsadd(string log)
-        {
-            try
-            {
-                string str = DateTime.Now.ToString("yyyy.MM.dd HH:mm:ss") + ": " + log + Environment.NewLine;
-                File.AppendAllText(LogsPath, str);
-            }
-            catch (Exception)
-            {
-                Thread.Sleep(100);
-                Logsadd(log);
-            }
-        }
-        #endregion
-
         #region 图片转换
         /// <summary>
         /// base64 转 Image
@@ -854,6 +830,7 @@ namespace BookHelperLib
         /// <param name="base64">base64字符串</param>
         public static Bitmap Base64ToImage(string base64)
         {
+            if (string.IsNullOrWhiteSpace(base64)) return null;
             base64 = base64.Replace("data:image/png;base64,", "").Replace("data:image/jgp;base64,", "").Replace("data:image/jpg;base64,", "").Replace("data:image/jpeg;base64,", "");//将base64头部信息替换
             byte[] bytes = Convert.FromBase64String(base64);
             MemoryStream memStream = new MemoryStream(bytes);
@@ -871,8 +848,24 @@ namespace BookHelperLib
             try
             {
                 Bitmap bmp = new Bitmap(fileFullName);
+                return ImageToBase64(bmp);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Image 转成 base64
+        /// </summary>
+        /// <param name="fileFullName">图片文件路径</param>
+        public static string ImageToBase64(Bitmap bitmap)
+        {
+            try
+            {
                 MemoryStream ms = new MemoryStream();
-                bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                 byte[] arr = new byte[ms.Length]; ms.Position = 0;
                 ms.Read(arr, 0, (int)ms.Length); ms.Close();
                 return Convert.ToBase64String(arr);
@@ -882,7 +875,6 @@ namespace BookHelperLib
                 return null;
             }
         }
-
         #endregion
     }
 }

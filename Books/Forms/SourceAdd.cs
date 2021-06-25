@@ -18,7 +18,7 @@ namespace Books
             string sourceurl = textBox2.Text.Trim();
             if (sourcename == "")
             {
-                MessageBox.Show("Source name is Empty");
+                MessageBox.Show("源名不能为空");
                 return;
             }
             GetResult(sourcename, sourceurl);

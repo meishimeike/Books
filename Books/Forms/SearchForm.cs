@@ -48,7 +48,7 @@ namespace Books
                 }
             }else
             {
-                MessageBox.Show("Please add source.");
+                MessageBox.Show("请添加源.");
             }
             
         }
@@ -94,6 +94,7 @@ namespace Books
             PictureBox pb = (PictureBox)sender;
             pageinfo pi = (pageinfo)pb.Tag;
             GetBooksList(pi.rootname, pi.sourcename, pi.pageurl);
+            
         }
 
         private void treeView1_DoubleClick(object sender, EventArgs e)
@@ -127,7 +128,6 @@ namespace Books
                 GetBooksList(rootname, sourcename, listurl);
             }
             treeView1.Cursor = Cursors.Default;
-            UpdateCoveimages();
         }
 
         private void GetBooksList(string rootname, string sourcename, string listurl)
@@ -155,10 +155,11 @@ namespace Books
                 ListViewItem lvi = new ListViewItem(book.Name);
                 lvi.Tag = book;
                 lvi.ImageKey = book.Name;
-                lvi.ToolTipText = "作者:" + book.Author + Environment.NewLine + "源:" + book.RootSourcename + "[" + book.Sourcename + "]" + Environment.NewLine + "简介:" + book.Des;
+                lvi.ToolTipText = "作者:" + book.Author + Environment.NewLine + "源:" + "[" + book.RootSourcename + "]" + "『" + book.Sourcename + "』" + Environment.NewLine + "简介:" + book.Des;
                 listView1.Items.Add(lvi);
             }
-            AddControl(rootname, sourcename, Pages);          
+            AddControl(rootname, sourcename, Pages);
+            UpdateCoveimages();
         }
 
         private void UpdateCoveimages()
@@ -175,22 +176,23 @@ namespace Books
             if (!File.Exists(book.Coverpath))
             {
                 BookHelper.DownloadFile(book.Coverurl, book.Coverpath);
+
                 if (File.Exists(book.Coverpath))
                 {
                     if (InvokeRequired)
                     {
-                        Invoke(new Action(() => {
+                        Invoke(new Action(() =>
+                        {
                             try
                             {
                                 imageList1.Images.RemoveByKey(book.Name);
-                                imageList1.Images.Add(book.Name, BookHelper.ReadImageFile(book.Coverpath));
+                                imageList1.Images.Add(book.Name, BookHelper.ReadImageFile(book.Coverpath));         
                             }
                             catch (Exception)
                             {
-                                //File.Delete(book.Coverpath);
-                                //throw;
+
                             }
-                            
+
                         }));
                     }
                     else
@@ -202,14 +204,14 @@ namespace Books
                         }
                         catch (Exception)
                         {
-                            //File.Delete(book.Coverpath);
-                            //throw;
+
                         }
                     }
-                    
+
                 }
             }
-         }      
+            
+        }      
         private void addToMybooksToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listView1.SelectedItems.Count > 0)
@@ -251,7 +253,7 @@ namespace Books
                 ListViewItem lvi = new ListViewItem(book.Name);
                 lvi.Tag = book;
                 lvi.ImageKey = book.Name;
-                lvi.ToolTipText = "作者:" + book.Author + Environment.NewLine + "源:" + book.RootSourcename + "[" + book.Sourcename + "]" + Environment.NewLine + "简介:" + book.Des;
+                lvi.ToolTipText = "作者:" + book.Author + Environment.NewLine + "源:" + "[" + book.RootSourcename + "]" + "『" + book.Sourcename + "』" + Environment.NewLine + "简介:" + book.Des;
                 listView1.Items.Add(lvi);         
             }
 

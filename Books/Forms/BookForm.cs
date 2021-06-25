@@ -118,10 +118,14 @@ namespace Books
                     BK.Read = int.Parse(MyCryptography.DESDecrypt(DT.Rows[i][10].ToString()));
 
                     ListViewItem lvi = new ListViewItem(BK.Name);
-                    imageList1.Images.Add(BK.Name, BookHelper.Base64ToImage(BK.Coverbase64));
+                    Image img = BookHelper.Base64ToImage(BK.Coverbase64);
+                    if (img == null) 
+                        imageList1.Images.Add(BK.Name, Properties.Resources._null); 
+                    else 
+                        imageList1.Images.Add(BK.Name, img);                    
                     lvi.ImageKey = BK.Name;
                     lvi.Tag = BK;
-                    lvi.ToolTipText = "作者:" + BK.Author + Environment.NewLine + "源:" + BK.RootSourcename + "[" + BK.Sourcename + "]" + Environment.NewLine + "简介:" + BK.Des;
+                    lvi.ToolTipText = "作者:" + BK.Author + Environment.NewLine + "源:" + "[" + BK.RootSourcename + "]" + "『" + BK.Sourcename + "』" + Environment.NewLine + "简介:" + BK.Des;
                     listView1.Items.Add(lvi);
                 }
 
@@ -146,12 +150,15 @@ namespace Books
                     BookHelper.Book bK = (BookHelper.Book)lv.Tag;
                     if (bK.Name == book.Name && bK.Sourcename==book.Sourcename)
                     {
-                        MessageBox.Show("Do not add repeatedly.");
+                        MessageBox.Show("添加的书已存在，请不要重复添加！");
                         return;
                     }
                 }
-                string Coverbase64 = BookHelper.ImageToBase64(book.Coverpath);
-
+                string Coverbase64 = "";
+                if (File.Exists(book.Coverpath))
+                    Coverbase64 = BookHelper.ImageToBase64(book.Coverpath);
+                else
+                    Coverbase64 = BookHelper.ImageToBase64(Properties.Resources._null);
                 string sql = string.Format("INSERT INTO Books(Userid,Rootsourcename,Sourcename,Name,Url,Author,Coverurl,Coverbase64,Des,Read) VALUES({0},\'{1}\',\'{2}\',\'{3}\',\'{4}\',\'{5}\',\'{6}\',\'{7}\',\'{8}\',\'{9}\')", Configs.UserId, MyCryptography.DESEncrypt(book.RootSourcename), MyCryptography.DESEncrypt(book.Sourcename), MyCryptography.DESEncrypt(book.Name), MyCryptography.DESEncrypt(book.Url), MyCryptography.DESEncrypt(book.Author), MyCryptography.DESEncrypt(book.Coverurl), Coverbase64, MyCryptography.DESEncrypt(book.Des), MyCryptography.DESEncrypt("0"));
                 if (Configs.Sql.ExecuteNonQuery(sql) > 0)
                 {
@@ -162,14 +169,14 @@ namespace Books
                     ListViewItem lvi = new ListViewItem(book.Name);                 
                     lvi.ImageKey = book.Name;
                     lvi.Tag = book;
-                    lvi.ToolTipText = "作者:" + book.Author + Environment.NewLine + "源:" + book.RootSourcename + "[" + book.Sourcename + "]" + Environment.NewLine + "简介:" + book.Des;
+                    lvi.ToolTipText = "作者:" + book.Author + Environment.NewLine + "源:" + "[" + book.RootSourcename + "]" + "『" + book.Sourcename + "』" + Environment.NewLine + "简介:" + book.Des;
                     listView1.Items.Add(lvi);
-                    MessageBox.Show("Success.");
+                    MessageBox.Show("添加成功。");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Add book faile," + ex.Message);
+                MessageBox.Show("添加失败," + ex.Message);
             }
            
         }
@@ -224,7 +231,7 @@ namespace Books
         {
             if (listView1.SelectedItems.Count > 0)
             {
-                if (MessageBox.Show("Are you sure you want to delete the selected items", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show("确认要删除选中的书籍吗？", "删除", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     for (int i = listView1.SelectedItems.Count-1; i >-1 ; i--)
                     {
@@ -233,7 +240,7 @@ namespace Books
                         if (Configs.Sql.ExecuteNonQuery(sql) > 0)
                             listView1.SelectedItems[i].Remove();
                         else
-                            MessageBox.Show(listView1.SelectedItems[i].Text+",Delete Faile");
+                            MessageBox.Show(listView1.SelectedItems[i].Text+",删除失败。");
                     }
                 }
             }
@@ -269,7 +276,7 @@ namespace Books
 
         private void clearCacheToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(MessageBox.Show("Are you sure clean all datacache?", "Warning", MessageBoxButtons.YesNo,MessageBoxIcon.Warning) == DialogResult.OK)
+            if(MessageBox.Show("确认要清除所有数据吗？", "警告", MessageBoxButtons.YesNo,MessageBoxIcon.Warning) == DialogResult.OK)
             {
                 string sql = @"DELETE FROM Fictions;
                            DELETE FROM ;
@@ -278,7 +285,7 @@ namespace Books
                            ";
                 if (Configs.Sql.ExecuteNonQuery(sql) > 0)
                 {
-                    MessageBox.Show("Clean Success！");
+                    MessageBox.Show("清除成功！");
                 }
             }           
         }
@@ -392,12 +399,12 @@ namespace Books
                     {
                         Invoke(new Action(() =>
                         {
-                            toolStripStatusLabel2.Text = string.Format("Star Cache 《{0}》 {1}.", book.Name, Chapter);
+                            toolStripStatusLabel2.Text = string.Format("开始缓存 《{0}》 {1}.", book.Name, Chapter);
                         }));
                     }
                     else
                     {
-                        toolStripStatusLabel2.Text = string.Format("Star Cache 《{0}》 {1}.", book.Name, Chapter);
+                        toolStripStatusLabel2.Text = string.Format("开始缓存 《{0}》 {1}.", book.Name, Chapter);
                     }
 
                     Thread cache = new Thread(() =>
@@ -464,12 +471,12 @@ namespace Books
             {
                 Invoke(new Action(() =>
                 {
-                    toolStripStatusLabel2.Text = "No jobs";
+                    toolStripStatusLabel2.Text = "无工作";
                 }));
             }
             else
             {
-                toolStripStatusLabel2.Text = "No jobs";
+                toolStripStatusLabel2.Text = "无工作";
             }
         }
 

@@ -32,8 +32,7 @@ namespace Books
             string sql = string.Format("UPDATE Proxys SET Enable={0},Type='{1}',Host='{2}',Port={3},User='{4}',Password='{5}' WHERE Userid={6}", enable, type, host, port, user, passwd, Configs.UserId);
             if (Configs.Sql.ExecuteNonQuery(sql) < 1)
             {
-                MessageBox.Show("Sqlite failure,UPDATE Proxy Data failure");
-                BookHelper.Logsadd("Sqlite failure,UPDATE Proxy Data failure");
+                MessageBox.Show("Sqlite 失败,数据更新失败.");
                 return;
             }
             BookHelper.SetProxy(enable, type, host, port, user, passwd);
@@ -46,9 +45,12 @@ namespace Books
             if (proxy.Enable)
             {
                 radioButton2.Checked = true;
-            }else
+                linkLabel1.Enabled = true;
+            }
+            else
             {
                 radioButton1.Checked = true;
+                linkLabel1.Enabled = false;
             }
             textBox1.Text = proxy.Host;
             textBox2.Text = proxy.Port.ToString();
@@ -69,18 +71,28 @@ namespace Books
                 HttpClient httpClient = new HttpClient(Hch);
                 if (string.IsNullOrWhiteSpace(httpClient.GetStringAsync("http://www.baidu.com/").Result))
                 {
-                    MessageBox.Show("Failed to connect to the network.");
+                    MessageBox.Show("网络连接失败.");
                 }
                 else
                 {
-                    MessageBox.Show("Connected to the network successfully");
+                    MessageBox.Show("网络连接成功");
                 }
             }
             catch (Exception)
             {
-                MessageBox.Show("Failed to connect to the network.");
+                MessageBox.Show("网络连接失败.");
             }    
             linkLabel1.Cursor = Cursors.Default;
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            linkLabel1.Enabled = false;
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            linkLabel1.Enabled = true;
         }
     }
 }

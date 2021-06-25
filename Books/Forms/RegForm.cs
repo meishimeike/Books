@@ -21,24 +21,24 @@ namespace Books
             string repassword = textBox3.Text.Trim();
             if (username == "") 
             {
-                MessageBox.Show("Username is not allow null", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("用户名不能为空", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             string sql = string.Format("SELECT ID FROM Users WHERE Username = '{0}'", MyCryptography.DESEncrypt(username));
             DataTable DT = Configs.Sql.ExecuteQuery(sql);
             if (DT.Rows.Count>0)
             {
-                MessageBox.Show("Username is exist", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("用户名已存在", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if (password == "")
             {
-                MessageBox.Show("Password is not allow null", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("密码不能为空", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if (password != repassword) 
             {
-                MessageBox.Show("Password is discordance", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("两次密码不一致", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -56,20 +56,16 @@ namespace Books
                     Configs.Sql.ExecuteNonQuery(Proxysql);
                     Configs.Sql.ExecuteNonQuery(Treesql);
                     Configs.Sql.ExecuteNonQuery(Richsql);
-                    MessageBox.Show("Register is Success");
+                    MessageBox.Show("注册成功!");
                     Close();
                 }else
                 {
-                    MessageBox.Show("Register is failure");
+                    MessageBox.Show("注册失败!");
                 }
-                
-
             }
             catch (Exception ex){
-                MessageBox.Show("Register is failure,"+ex.Message);
+                MessageBox.Show("注册失败," + ex.Message);
             }
-                
-           
         }
     }
 }

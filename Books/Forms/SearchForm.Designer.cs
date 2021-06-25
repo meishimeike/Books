@@ -76,7 +76,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(96, 32);
             this.button1.TabIndex = 1;
-            this.button1.Text = "Search";
+            this.button1.Text = "搜索";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -135,13 +135,13 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addToMybooksToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(179, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(161, 26);
             // 
             // addToMybooksToolStripMenuItem
             // 
             this.addToMybooksToolStripMenuItem.Name = "addToMybooksToolStripMenuItem";
-            this.addToMybooksToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.addToMybooksToolStripMenuItem.Text = "Add To Mybooks";
+            this.addToMybooksToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.addToMybooksToolStripMenuItem.Text = "添加到我的书架";
             this.addToMybooksToolStripMenuItem.Click += new System.EventHandler(this.addToMybooksToolStripMenuItem_Click);
             // 
             // imageList1
@@ -160,7 +160,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SearchForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "SearchForm";
+            this.Text = "添加书";
             this.Load += new System.EventHandler(this.SearchForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
